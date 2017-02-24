@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo apt-get remove mono-xbuild mono-devel mono-utils mono-runtime mono-runtime-common mono-runtime-sgen libmono-2.0-dev libmono-profiler libmonoboehm-2.0-dev libmonosgen-2.0-1 libmonoboehm-2.0-1 ; sudo apt-get purge mono-utils mono-runtime mono-runtime-common mono-runtime-sgen ; sudo apt-get autoremove ; echo "deb http://download.mono-project.com/repo/debian wheezy/snapshots/4.6.2.16/. main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list ; sudo apt-get update ; sudo apt-get install mono-complete mono-boehm-runtime
