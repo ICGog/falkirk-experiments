@@ -64,8 +64,8 @@ def plot_timeline(plot_file_name, all_x_vals, all_y_vals, labels, unit='sec'):
                  color=colors[index])
     plt.ylabel('Rollback duration [s]')
     plt.ylim(0, max_y_val + 1)
-    plt.yticks(range(0, max_y_val, 1000000),
-               [str(y / 1000 / 1000) for y in range(0, max_y_val, 1000000)])
+    plt.yticks(range(0, max_y_val, 100000),
+               [str(y / 1000) for y in range(0, max_y_val, 100000)])
 
     plt.xlim(0, max_x_val)
     plt.xticks(range(0, max_x_val, 500000000),

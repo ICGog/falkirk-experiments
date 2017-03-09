@@ -95,8 +95,8 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         index += 1
 
     plt.xlim(0, max_cdf_val)
-    plt.xticks(range(0, max_cdf_val, 3000000),
-               [str(x / 3000000) for x in range(0, max_cdf_val, 3000000)])
+    plt.xticks(range(0, max_cdf_val, 100000),
+               [str(x / 1000) for x in range(0, max_cdf_val, 100000)])
     plt.ylim(0, 1.0)
     plt.yticks(np.arange(0.0, 1.01, 0.2),
                [str(x) for x in np.arange(0.0, 1.01, 0.2)])
@@ -115,7 +115,7 @@ def main(argv):
 
     plot_cdf('ftmanager_cdf',
              [get_action_duration(FLAGS.ftmanager_log_path, FLAGS.begin_tag, FLAGS.end_tag)],
-             'Duration [s]', ["test"], bin_width=10000)
+             'Duration [ms]', ["test"], bin_width=1000)
 
 
 if __name__ == '__main__':
