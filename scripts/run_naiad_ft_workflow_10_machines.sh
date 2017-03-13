@@ -1,0 +1,2 @@
+#!/bin/bash
+parallel-ssh -v -h ~/caelum_tmp -t 0 -p 50 -i 'PROCID=`./falkirk-experiments/scripts/get_falkirk_proc_id.sh` ; cd falkirk/Naiad/ ; mono-sgen ./FaultToleranceExamples/bin/Release/FaultToleranceExamples.exe complex-ft-workflow -mwc 10 -log /tmp/falkirk/ -p $PROCID -n 10 -slowBase 1 -slowRange 2 -ccBase 3 -ccRange 5 -fpBase 8 -fpRange 2 -numberOfKeys 2500 -fastBatchSize 1 -fastSleepTime 400 -ccBatchTime 2500 -slowBatchTime 40000 -htBatchSize 40 -htSleepTime 1000 -htInitialBatches 25 -h @/home/${USER}/machines &> caelum$PROCID.log'
