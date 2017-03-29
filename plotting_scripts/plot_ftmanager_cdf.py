@@ -38,6 +38,7 @@ def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
             else:
                 print "Two consecutive end tags!"
     logfile.close()
+    print "Durations count: ", len(durations)
     return durations
 
 
