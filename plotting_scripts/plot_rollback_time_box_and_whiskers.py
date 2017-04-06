@@ -63,8 +63,8 @@ def plot_rollback_duration(durations, labels, colors):
         max_val = np.max(duration)
         print perc90, perc99, max_val
 
-    plt.plot(-1, -1, label='Differential dataflow', color='r', lw=1.0)
-    plt.plot(-1, -1, label='Incremental', color='g', lw=1.0)
+    plt.plot(-1, -1, label='Differential dataflow', color='b', lw=1.0)
+    plt.plot(-1, -1, label='Incremental', color='r', lw=1.0)
 
     for i in range(2, len(durations), 2):
         plt.axvline(i + 0.5, ls='-', color='k')
