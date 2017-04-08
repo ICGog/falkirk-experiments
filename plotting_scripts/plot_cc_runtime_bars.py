@@ -37,7 +37,7 @@ def plot_runtimes(out_file_name, runtimes, labels):
         plt.figure()
         set_rcs()
 
-    colors = ['b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']
+    colors = ['b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b', 'r', 'b']
     avg_runtimes = []
     std_runtimes = []
     max_runtime = 0
@@ -52,22 +52,38 @@ def plot_runtimes(out_file_name, runtimes, labels):
 
 
     index = 0
+    pos = gap
     for avg_runtime in avg_runtimes:
         print avg_runtime
-        plt.bar(gap + index * (width + gap), avg_runtime, width,
+        blabel = ""
+        if index < 2:
+            if index % 2 == 1:
+                blabel="Naiar + SRS"
+            else:
+                blabel = "Naiad"
+        plt.bar(pos, avg_runtime, width,
                 color=colors[index], lw=0.5,
                 yerr=std_runtimes[index], ecolor='k', capsize=3,
-                error_kw={'linewidth': 0.5, 'mew': 0.5})
+                error_kw={'linewidth': 0.5, 'mew': 0.5}, label=blabel)
+        if index % 2 == 1:
+            pos += width + gap
+        else:
+            pos += width
         index += 1
 
     plt.ylim(0, max_runtime + 1000)
     plt.ylabel("Runtime [sec]")
     plt.yticks([x for x in range(0, max_runtime + 1000, 20000)],
                [str(x / 1000) for x in range(0, max_runtime + 1000, 20000)])
-    plt.xlim(0, gap + len(avg_runtimes) * (width + gap))
-    plt.xticks([gap + x * (width + gap) + width / 2 for x in range(0, len(avg_runtimes))],
+    plt.xlim(0, gap + len(avg_runtimes) * width + len(avg_runtimes) / 2 * gap)
+    plt.xticks([gap + x * (2 * width + gap) + width for x in range(0, len(avg_runtimes) / 2)],
                labels)
     plt.xlabel("Number of cores")
+    leg = plt.legend(loc='upper right', handlelength=1.0, handletextpad=0.3)
+    fr = leg.get_frame()
+    fr.set_linewidth(0)
+    fr.set_fill(None)
+
     plt.savefig(out_file_name, format='pdf',
                 bbox_inches='tight', pad_inches=0.01)
 
@@ -84,6 +100,10 @@ def main(argv):
         runtimes.append(get_runtime(FLAGS.runtime_file_path,
                                     num_proc,
                                     'noft'))
+        runtimes.append(get_runtime(FLAGS.runtime_file_path,
+                                    num_proc,
+                                    'incremental'))
+
 
     plot_runtimes('cc_runtime_boxes.pdf', runtimes, num_procs)
 
