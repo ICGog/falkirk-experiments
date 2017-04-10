@@ -24,7 +24,7 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
     for row in runtime_file.readlines():
         if proc_tag in row and ft_type in row:
             fields = [x.strip() for x in row.split(' ')]
-            runtime = int(fields[1])
+            runtime = int(fields[2])
             runtimes.append(runtime)
     runtime_file.close()
     return runtimes
@@ -55,12 +55,13 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
 
     plt.ylim(0, max_y_val + 1000)
     plt.ylabel("Runtime [sec]")
-    plt.yticks([x for x in range(0, max_y_val + 1000, 20000)],
-               [str(x / 1000) for x in range(0, max_y_val + 1000, 20000)])
+    plt.yticks([x for x in range(0, max_y_val + 1000, 300000)],
+               [str(x / 1000) for x in range(0, max_y_val + 1000, 300000)])
+    plt.xlim(num_procs[0], num_procs[-1])
     plt.xticks(num_procs, [str(x) for x in num_procs])
-    plt.xlabel("Number of cores")
-    plt.legend(loc=2, frameon=False, handlelength=1.5, handletextpad=0.1,
-               numpoints=1)
+    plt.xlabel("Number of machines")
+    plt.legend(loc='upper right', frameon=False, handlelength=1.5,
+               handletextpad=0.1, numpoints=1)
 
 #    leg = plt.legend(loc='upper right', handlelength=1.0, handletextpad=0.3)
 #    fr = leg.get_frame()
