@@ -30,8 +30,14 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
     return runtimes
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
-    colors = {'Naiad Sync':'y', 'Naiad + SRS':'r', 'Naiad + SRS each time': 'c'}
-    markers = {'Naiad Sync':'x', 'Naiad + SRS':'o', 'Naiad + SRS each time': 'v'}
+    colors = {'Naiad Sync':'y',
+              'Naiad + SRS':'r',
+              'Naiad + SRS eager + span': 'c',
+              'Naiad + SRS eager': 'm'}
+    markers = {'Naiad Sync':'x',
+               'Naiad + SRS':'o',
+               'Naiad + SRS eager + span': 'v',
+               'Naiad + SRS eager': '<'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
@@ -41,6 +47,8 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
     max_y_val = 0
 
     for setup, setup_runtimes in runtimes.iteritems():
+        print setup
+        print setup_runtimes
         data = []
         for num_proc, proc_runtimes in setup_runtimes.iteritems():
             max_y_val = max(max_y_val, np.max(proc_runtimes))
@@ -79,21 +87,29 @@ def main(argv):
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
     num_procs = FLAGS.num_procs.split(',')
-    runtimes = {'Naiad Sync':{}, 'Naiad + SRS':{}, 'Naiad + SRS each time':{} }
+    runtimes = {'Naiad Sync':{},
+                'Naiad + SRS':{},
+                'Naiad + SRS eager + span':{},
+                'Naiad + SRS eager':{}}
+#    runtimes = {'Naiad Sync':{}, 'Naiad + SRS':{}, 'Naiad + SRS eager':{}}
     for num_proc in num_procs:
         for setup in runtimes.keys():
             runtimes[setup][int(num_proc)] = []
     for num_proc in num_procs:
         runtimes['Naiad Sync'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                             num_proc,
-                                                            'sync'))
+                                                            'length_1_sync'))
         runtimes['Naiad + SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                                   num_proc,
                                                                   'length_1_incremental'))
 
-        runtimes['Naiad + SRS each time'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                  num_proc,
-                                                                  'length_2_incremental'))
+        runtimes['Naiad + SRS eager + span'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                               num_proc,
+                                                                               'caching_output_eagerly'))
+        runtimes['Naiad + SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                        num_proc,
+                                                                        'threads_eagerly'))
+
 
     print runtimes
     plot_runtimes('cc_selective_runtime_lines.pdf', runtimes, [int(x) for x in num_procs])
