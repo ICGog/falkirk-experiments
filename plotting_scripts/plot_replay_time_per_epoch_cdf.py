@@ -12,33 +12,22 @@ from utils import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_string('ftmanager_log_path', '',
-                     'Path to the ftmanager log file.')
-gflags.DEFINE_string('begin_tag', '', 'Name of begin the event')
-gflags.DEFINE_string('end_tag', '', 'Name of end the event')
+gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
+gflags.DEFINE_string('labels', '', ', separated list of labels.')
 
 
-def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
-    logfile = open(ftmanager_log_path)
-    last_begin_tag = -1
-    seen_end_tag = True
+def get_action_duration(log_path):
+    print '--------------- ' + log_path + ' ----------------'
     durations = []
+    logfile = open(log_path)
     for row in logfile.readlines():
-        fields = [x.strip() for x in row.split(':')]
-        time = int(fields[0])
-        if fields[1] == begin_tag:
-            if seen_end_tag is False:
-                print "Two consecutive begin tags!"
-            last_begin_tag = time
-            seen_end_tag = False
-        if fields[1] == end_tag:
-            if last_begin_tag >= 0:
-                seen_end_tag = True
-                durations.append(time - last_begin_tag)
-            else:
-                print "Two consecutive end tags!"
+        fields = [x.strip() for x in row.split(' ')]
+        if len(fields) > 5 and fields[0] == 'Time':
+            time = int(fields[5])
+            if time > 2000:
+                print row
+            durations.append(time)
     logfile.close()
-    print "Durations count: ", len(durations)
     return durations
 
 
@@ -96,8 +85,8 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         index += 1
 
     plt.xlim(0, max_cdf_val)
-    plt.xticks(range(0, max_cdf_val, 100000),
-               [str(x / 1000) for x in range(0, max_cdf_val, 100000)])
+    plt.xticks(range(0, max_cdf_val, 100),
+               [str(x) for x in range(0, max_cdf_val, 100)])
     plt.ylim(0, 1.0)
     plt.yticks(np.arange(0.0, 1.01, 0.2),
                [str(x) for x in np.arange(0.0, 1.01, 0.2)])
@@ -114,9 +103,12 @@ def main(argv):
     except gflags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
-    plot_cdf('ftmanager_cdf',
-             [get_action_duration(FLAGS.ftmanager_log_path, FLAGS.begin_tag, FLAGS.end_tag)],
-             'Duration [ms]', ["test"], bin_width=1000)
+    log_paths = FLAGS.log_paths.split(',')
+    labels = FLAGS.labels.split(',')
+    durations = []
+    for log_path in log_paths:
+        durations.append(get_action_duration(log_path))
+    plot_cdf('replay_cdf', durations, 'Duration [ms]', labels, bin_width=1)
 
 
 if __name__ == '__main__':
