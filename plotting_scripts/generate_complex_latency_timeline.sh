@@ -1,0 +1,2 @@
+#!/bin/bash
+python plot_complex_latency_timeline.py --input_latency_file_path=/mnt/data/icg27/falkirk/falkirk-experiments/plotting_scripts/inputLatency.021.log --start_time=200000 --end_time=500000 --fast_latency_file_path=/mnt/data/icg27/falkirk/falkirk-experiments/plotting_scripts/fastPipe.021.log --controller_file_path=/mnt/data/icg27/falkirk/falkirk-experiments/plotting_scripts/controller.000.log
