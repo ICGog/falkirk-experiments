@@ -103,12 +103,12 @@ def main(argv):
                                                                 num_proc,
                                                                 'length_1_incremental'))
 
-        runtimes['Naiad SRS eager + span'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+        runtimes['Naiad SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                                              num_proc,
                                                                              'caching_output_eagerly'))
-        runtimes['Naiad SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                      num_proc,
-                                                                      'threads_eagerly'))
+        runtimes['Naiad SRS eager + span'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                             num_proc,
+                                                                             'threads_eagerly'))
 
 
     print runtimes
