@@ -31,13 +31,13 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
     colors = {'Naiad Sync':'y',
-              'Naiad + SRS':'r',
-              'Naiad + SRS eager + span': 'c',
-              'Naiad + SRS eager': 'm'}
+              'Naiad SRS':'r',
+              'Naiad SRS eager + span': 'c',
+              'Naiad SRS eager': 'm'}
     markers = {'Naiad Sync':'x',
-               'Naiad + SRS':'o',
-               'Naiad + SRS eager + span': 'v',
-               'Naiad + SRS eager': '<'}
+               'Naiad SRS':'o',
+               'Naiad SRS eager + span': 'v',
+               'Naiad SRS eager': '<'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
@@ -59,7 +59,7 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
         print num_procs
         plt.errorbar(num_procs, run_times, stds,
                      label=setup, color=colors[setup], marker=markers[setup],
-                     mfc='none', mec=colors[setup], mew=1.0, lw=1.0)
+                     mfc='none', markersize=4, mec=colors[setup], mew=1.0, lw=1.0)
 
     plt.ylim(0, max_y_val + 1000)
     plt.ylabel("Runtime [sec]")
@@ -67,7 +67,7 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
                [str(x / 1000) for x in range(0, max_y_val + 1000, 300000)])
     plt.xlim(num_procs[0], num_procs[-1])
     plt.xticks(num_procs, [str(x) for x in num_procs])
-    plt.xlabel("Number of machines")
+    plt.xlabel("Number of computers")
     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
@@ -88,27 +88,27 @@ def main(argv):
 
     num_procs = FLAGS.num_procs.split(',')
     runtimes = {'Naiad Sync':{},
-                'Naiad + SRS':{},
-                'Naiad + SRS eager + span':{},
-                'Naiad + SRS eager':{}}
-#    runtimes = {'Naiad Sync':{}, 'Naiad + SRS':{}, 'Naiad + SRS eager':{}}
+                'Naiad SRS':{},
+                'Naiad SRS eager + span':{},
+                'Naiad SRS eager':{}}
+#    runtimes = {'Naiad Sync':{}, 'Naiad SRS':{}, 'Naiad SRS eager':{}}
     for num_proc in num_procs:
         for setup in runtimes.keys():
             runtimes[setup][int(num_proc)] = []
     for num_proc in num_procs:
         runtimes['Naiad Sync'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                            num_proc,
-                                                            'length_1_sync'))
-        runtimes['Naiad + SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                  num_proc,
-                                                                  'length_1_incremental'))
+                                                                 num_proc,
+                                                                 'length_1_sync'))
+        runtimes['Naiad SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                num_proc,
+                                                                'length_1_incremental'))
 
-        runtimes['Naiad + SRS eager + span'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                               num_proc,
-                                                                               'caching_output_eagerly'))
-        runtimes['Naiad + SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                        num_proc,
-                                                                        'threads_eagerly'))
+        runtimes['Naiad SRS eager + span'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                             num_proc,
+                                                                             'caching_output_eagerly'))
+        runtimes['Naiad SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                      num_proc,
+                                                                      'threads_eagerly'))
 
 
     print runtimes

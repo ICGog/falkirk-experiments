@@ -30,8 +30,8 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
     return runtimes
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
-    colors = {'Naiad':'b', 'Naiad + SRS':'r'}
-    markers = {'Naiad':'^', 'Naiad + SRS':'o'}
+    colors = {'Naiad':'b', 'Naiad SRS':'r'}
+    markers = {'Naiad':'^', 'Naiad SRS':'o'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
@@ -51,7 +51,8 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
         print num_procs
         plt.errorbar(num_procs, run_times, stds,
                      label=setup, color=colors[setup], marker=markers[setup],
-                     mfc='none', mec=colors[setup], mew=1.0, lw=1.0)
+                     mfc='none', markersize=4, mec=colors[setup], mew=1.0,
+                     lw=1.0)
 
     plt.ylim(0, max_y_val + 1000)
     plt.ylabel("Runtime [sec]")
@@ -59,7 +60,7 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
                [str(x / 1000) for x in range(0, max_y_val + 1000, 300000)])
     plt.xlim(num_procs[0], num_procs[-1])
     plt.xticks(num_procs, [str(x) for x in num_procs])
-    plt.xlabel("Number of machines")
+    plt.xlabel("Number of computers")
     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
@@ -79,7 +80,7 @@ def main(argv):
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
     num_procs = FLAGS.num_procs.split(',')
-    runtimes = {'Naiad':{}, 'Naiad + SRS':{} }
+    runtimes = {'Naiad':{}, 'Naiad SRS':{} }
     for num_proc in num_procs:
         for setup in runtimes.keys():
             runtimes[setup][int(num_proc)] = []
@@ -87,9 +88,9 @@ def main(argv):
         runtimes['Naiad'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                             num_proc,
                                                             'noft'))
-        runtimes['Naiad + SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                  num_proc,
-                                                                  'incremental'))
+        runtimes['Naiad SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
+                                                                num_proc,
+                                                                'length_1_incremental'))
 
     print runtimes
     plot_runtimes('cc_runtime_lines.pdf', runtimes, [int(x) for x in num_procs])

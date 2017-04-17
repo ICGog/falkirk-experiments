@@ -101,10 +101,17 @@ def get_fast_latency(input_file_path):
 def plot_latencies(plot_file_name, (latencies, event_times),
                    (fast_latencies, slow_staleness, cc_staleness, fast_event_times),
                    (workers_failed, workers_paused, workers_rollback)):
+    if FLAGS.paper_mode:
+        plt.figure(figsize=(8, 2.75))
+        set_paper_rcs()
+    else:
+        plt.figure()
+        set_rcs()
+
     colors = {'fast':'b', 'input slow':'r', 'input cc':'y'}
     markers = {'fast':'^', 'input slow':'o', 'input cc':'+'}
 
-    plt.plot(event_times, [x / 1000.0 for x in latencies], label='Stable latency [sec]',
+    plt.plot(event_times, [x / 1000.0 for x in latencies], label='Input stable latency [sec]',
              color='y', marker='o', mfc='none', mec='y', mew=1.0, lw=1.0)
 
     plot_label = 'fast'
@@ -126,17 +133,27 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     #          mew=1.0, lw=1.0)
 
     duration = (FLAGS.end_time - FLAGS.start_time)
-    rollback_computed_loc = float(workers_rollback[-1] - FLAGS.start_time) / float(duration)
-    print rollback_computed_loc
-    plt.axvspan(workers_failed[0], workers_paused[-1], lw=0, color='0.8')
 
-    plt.annotate('', xy=(rollback_computed_loc, 0.0), xycoords='axes fraction',
-                 xytext=(0, 350), textcoords='offset points',
-                 arrowprops=dict(arrowstyle="-"), ha='left')
+    first_worker_pause = np.min(workers_paused)
+    last_worker_rollback = np.max(workers_rollback)
 
+    rollback_computed_loc = float(last_worker_rollback - FLAGS.start_time) / float(duration)
+    pause_computed_loc = float(first_worker_pause - FLAGS.start_time) / float(duration)
+
+
+    plt.axvline(first_worker_pause, linestyle='dashed', color='k', lw=0.5)
+    plt.axvline(last_worker_rollback, linestyle='dashed', color='k', lw=0.5)
+
+#    plt.annotate('', xy=(rollback_computed_loc, 0.0), xycoords='axes fraction',
+#                 xytext=(0, 350), textcoords='offset points',
+#                 arrowprops=dict(arrowstyle="-"), ha='left')
+    plt.annotate('Workers\npaused', xy=(pause_computed_loc, 0.5),
+                 xycoords='axes fraction', verticalalignment='right')
+    plt.annotate('Rollback\ncomputed', xy=(rollback_computed_loc, 0.85),
+                 xycoords='axes fraction', verticalalignment='left')
 
     plt.ylabel('Latency [sec]')
-    plt.ylim(0, 10)
+    plt.ylim(0, 12)
 #    plt.yticks()
     plt.xlabel('Runtime [sec]')
 
@@ -161,6 +178,11 @@ def main(argv):
                    get_input_latency(FLAGS.input_latency_file_path),
                    get_fast_latency(FLAGS.fast_latency_file_path),
                    get_rollback_events(FLAGS.controller_file_path))
+    # plot_latencies('complex_latency_timeline.pdf',
+    #                get_input_latency(FLAGS.input_latency_file_path),
+    #                get_fast_latency(FLAGS.fast_latency_file_path),
+    #                ([], [], []))
+
 
 
 if __name__ == '__main__':

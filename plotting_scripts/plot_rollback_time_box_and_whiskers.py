@@ -63,23 +63,24 @@ def plot_rollback_duration(durations, labels, colors):
         max_val = np.max(duration)
         print perc90, perc99, max_val
 
-    plt.plot(-1, -1, label='Differential dataflow', color='b', lw=1.0)
-    plt.plot(-1, -1, label='Incremental', color='r', lw=1.0)
+#    plt.plot(-1, -1, label='Differential dataflow', color='b', lw=1.0)
+#    plt.plot(-1, -1, label='Incremental', color='r', lw=1.0)
 
-    for i in range(2, len(durations), 2):
-        plt.axvline(i + 0.5, ls='-', color='k')
+#    for i in range(2, len(durations), 2):
+#        plt.axvline(i + 0.5, ls='-', color='k')
 
-    ax.legend(frameon=False, loc="upper center", ncol=6,
-              bbox_to_anchor=(0.0, 1.04, 1.0, 0.1), handletextpad=0.2,
-              columnspacing=0.2)
+#    ax.legend(frameon=False, loc="upper center", ncol=6,
+#              bbox_to_anchor=(0.0, 1.04, 1.0, 0.1), handletextpad=0.2,
+#              columnspacing=0.2)
 
     #plt.errorbar(range(1, len(setups) + 1), [np.mean(x) for x in runtimes],
     #             yerr=[np.std(x) for x in runtimes], marker="x")
     plt.xlim(0.5, len(durations) + 0.5)
     plt.ylim(ymin=0, ymax=30)
-    plt.xticks([x * 2 + 1.5 for x in range(0, len(labels))], labels)
+#    plt.xticks([x * 2 + 1.5 for x in range(0, len(labels))], labels)
+    plt.xticks([x * 1 + 1.5 for x in range(0, len(labels))], labels)
     plt.yticks(range(0, 10000001, 2000000), range(0, 11, 2))
-    plt.ylabel("Rollback computation [seconds]")
+    plt.ylabel("Rollback computation [sec]")
     plt.xlabel("Number of cores")
     plt.savefig("rollback_computation_box_whiskers.pdf",
                 format="pdf", bbox_inches="tight")
@@ -97,9 +98,9 @@ def main(argv):
     durations = []
     for manager_path in manager_paths:
         if 'incremental' in manager_path:
-            colors.append('r')
-        elif 'differential' in manager_path:
             colors.append('b')
+        elif 'differential' in manager_path:
+            colors.append('r')
         durations.append(get_action_duration(manager_path, FLAGS.begin_tag, FLAGS.end_tag))
 
     print len(durations)
