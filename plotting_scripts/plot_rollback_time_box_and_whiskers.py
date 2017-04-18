@@ -84,7 +84,7 @@ def plot_rollback_duration(durations, labels, colors):
                rotation='vertical')
     plt.yticks(range(0, 6000001, 1000000), range(0, 7, 1))
     plt.ylabel("Max span algorithm runtime [sec]")
-    plt.xlabel("Number of vertices")
+    plt.xlabel("Number of processing vertices")
     plt.savefig("rollback_computation_box_whiskers.pdf",
                 format="pdf", bbox_inches="tight")
 
