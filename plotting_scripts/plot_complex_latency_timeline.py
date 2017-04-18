@@ -112,11 +112,11 @@ def plot_latencies(plot_file_name, (latencies, event_times),
         plt.figure()
         set_rcs()
 
-    colors = {'fast':'b', 'input slow':'r', 'input cc':'y'}
+    colors = {'fast':'c', 'input slow':'r', 'input cc':'y'}
     markers = {'fast':'^', 'input slow':'o', 'input cc':'+'}
 
     plt.plot(event_times, [x / 1000.0 for x in latencies], label='Input stable latency [sec]',
-             color='y', marker='o', markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
+             color='y', marker='+', markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
 
     plot_label = 'fast'
     plt.plot(fast_event_times, [x / 1000.0 for x in fast_latencies],

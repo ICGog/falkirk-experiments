@@ -31,7 +31,7 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
     colors = {'Naiad Sync':'y',
-              'Naiad SRS':'r',
+              'Naiad SRS':'b',
               'Naiad SRS eager + span': 'c',
               'Naiad SRS eager': 'm'}
     markers = {'Naiad Sync':'x',

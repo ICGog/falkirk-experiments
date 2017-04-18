@@ -65,11 +65,11 @@ def plot_rollback_duration(durations, labels, colors):
         print 'Divided by 795 ', avg / 759
         print perc90, perc99, max_val
 
-#    plt.plot(-1, -1, label='Differential dataflow', color='b', lw=1.0)
-#    plt.plot(-1, -1, label='Incremental', color='r', lw=1.0)
+#    plt.plot(-1, -1, label='Differential dataflow', color='r', lw=1.0)
+#    plt.plot(-1, -1, label='Incremental', color='b', lw=1.0)
 
 #    for i in range(2, len(durations), 2):
-#        plt.axvline(i + 0.5, ls='-', color='k')
+#        plt.axvline(i + 0.5, ls='-', color='r')
 
 #    ax.legend(frameon=False, loc="upper center", ncol=6,
 #              bbox_to_anchor=(0.0, 1.04, 1.0, 0.1), handletextpad=0.2,
@@ -97,13 +97,13 @@ def main(argv):
 
     manager_paths = FLAGS.ftmanager_log_paths.split(',')
     xlabels = FLAGS.xlabels.split(',')
-    colors = ['k', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
+    colors = ['k', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b']
     durations = []
     for manager_path in manager_paths:
         if 'incremental' in manager_path:
-            colors.append('b')
-        elif 'differential' in manager_path:
             colors.append('r')
+        elif 'differential' in manager_path:
+            colors.append('b')
         durations.append(get_action_duration(manager_path, FLAGS.begin_tag, FLAGS.end_tag))
 
     print len(durations)

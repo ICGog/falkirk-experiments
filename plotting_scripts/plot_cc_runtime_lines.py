@@ -30,7 +30,7 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
     return runtimes
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
-    colors = {'Naiad':'b', 'Naiad SRS':'r'}
+    colors = {'Naiad':'r', 'Naiad SRS':'b'}
     markers = {'Naiad':'^', 'Naiad SRS':'o'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))

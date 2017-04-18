@@ -82,7 +82,7 @@ def get_fast_latency(input_file_path):
 
 
 def plot_latencies(latencies, labels):
-    colors = ['y', 'm', 'r', 'm', 'r', 'm', 'r']
+    colors = ['y', 'm', 'b', 'm', 'b', 'm', 'b']
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
@@ -95,7 +95,7 @@ def plot_latencies(latencies, labels):
                              median_lw=1.5)
 
     plt.plot(-1, -1, label='Naiad STW', color='m', lw=1.0)
-    plt.plot(-1, -1, label='Naiad SRS', color='r', lw=1.0)
+    plt.plot(-1, -1, label='Naiad SRS', color='b', lw=1.0)
 
     for i in range(2, len(latencies), 2):
         plt.axvline(i + 0.5, ls='-', color='k')

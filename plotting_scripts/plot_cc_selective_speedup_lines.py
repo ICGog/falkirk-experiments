@@ -37,8 +37,8 @@ def plot_speedups(plot_file_name, speedups, num_procs):
         plt.figure()
         set_rcs()
 
-    plt.plot(num_procs, speedups, label='Naiad SRS with selective', color='r', marker='o',
-             mfc='none', markersize=4, mec='r', mew=1.0, lw=1.0)
+    plt.plot(num_procs, speedups, label='Naiad SRS with selective', color='b', marker='o',
+             mfc='none', markersize=4, mec='b', mew=1.0, lw=1.0)
 
     plt.axhline(1.0, linestyle=':', color='k', lw=0.5)
 
@@ -64,7 +64,7 @@ def plot_speedups(plot_file_name, speedups, num_procs):
 
 def plot_runtimes(plot_file_name, runtimes, num_procs):
     colors = {'Naiad Sync':'y',
-              'Naiad SRS':'r',
+              'Naiad SRS':'b',
               'Naiad SRS eager + span': 'c',
               'Naiad SRS eager': 'm'}
     markers = {'Naiad Sync':'x',

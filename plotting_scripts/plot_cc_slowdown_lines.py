@@ -37,8 +37,8 @@ def plot_slowdowns(plot_file_name, slowdowns, num_procs):
         plt.figure()
         set_rcs()
 
-    plt.plot(num_procs, slowdowns, label='Naiad SRS', color='r', marker='o',
-             mfc='none', markersize=4, mec='r', mew=1.0, lw=1.0)
+    plt.plot(num_procs, slowdowns, label='Naiad SRS', color='b', marker='o',
+             mfc='none', markersize=4, mec='b', mew=1.0, lw=1.0)
 
     plt.axhline(1.0, linestyle=':', color='k', lw=0.5)
 
