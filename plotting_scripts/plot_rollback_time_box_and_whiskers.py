@@ -60,7 +60,9 @@ def plot_rollback_duration(durations, labels, colors):
     for duration in durations:
         perc90 = np.percentile(duration, 90)
         perc99 = np.percentile(duration, 99)
+        avg = np.mean(duration)
         max_val = np.max(duration)
+        print 'Divided by 795 ', avg / 759
         print perc90, perc99, max_val
 
 #    plt.plot(-1, -1, label='Differential dataflow', color='b', lw=1.0)
@@ -76,12 +78,13 @@ def plot_rollback_duration(durations, labels, colors):
     #plt.errorbar(range(1, len(setups) + 1), [np.mean(x) for x in runtimes],
     #             yerr=[np.std(x) for x in runtimes], marker="x")
     plt.xlim(0.5, len(durations) + 0.5)
-    plt.ylim(ymin=0, ymax=30)
+    plt.ylim(0, 6)
 #    plt.xticks([x * 2 + 1.5 for x in range(0, len(labels))], labels)
-    plt.xticks([x * 1 + 1.5 for x in range(0, len(labels))], labels)
-    plt.yticks(range(0, 10000001, 2000000), range(0, 11, 2))
-    plt.ylabel("Rollback computation [sec]")
-    plt.xlabel("Number of cores")
+    plt.xticks([x + 1 for x in range(0, len(labels))], labels,
+               rotation='vertical')
+    plt.yticks(range(0, 6000001, 1000000), range(0, 7, 1))
+    plt.ylabel("Max span algorithm runtime [sec]")
+    plt.xlabel("Number of vertices")
     plt.savefig("rollback_computation_box_whiskers.pdf",
                 format="pdf", bbox_inches="tight")
 
@@ -94,7 +97,7 @@ def main(argv):
 
     manager_paths = FLAGS.ftmanager_log_paths.split(',')
     xlabels = FLAGS.xlabels.split(',')
-    colors = ['k']
+    colors = ['k', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r']
     durations = []
     for manager_path in manager_paths:
         if 'incremental' in manager_path:

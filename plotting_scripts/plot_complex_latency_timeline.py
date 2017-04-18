@@ -145,10 +145,10 @@ def plot_latencies(plot_file_name, (latencies, event_times),
 
     print first_worker_failure, last_worker_pause, last_worker_rollback
 
-    plt.axvline(first_worker_failure, linestyle='dashed', color='k', lw=0.5)
-    plt.axvline(last_worker_pause, linestyle='dashed', color='k', lw=0.5)
-    plt.axvline(last_worker_rollback, linestyle='dashed', color='k', lw=0.5)
-    plt.axvline(last_worker_recovered, linestyle='dashed', color='k', lw=0.5)
+    plt.axvline(first_worker_failure, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_pause, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_rollback, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_recovered, linestyle=':', color='k', lw=0.5)
     plt.annotate('First\nfailure', xy=(first_worker_failure - 100, 3),
                  xycoords='data', verticalalignment='left', ha='right')
     plt.annotate('Workers\npaused', xy=(last_worker_pause - 100, 5),
@@ -161,7 +161,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     plt.ylabel('Latency [sec]')
     plt.ylim(0, 16)
 #    plt.yticks()
-    plt.xlabel('Runtime [sec]')
+    plt.xlabel('Experiment time [sec]')
 
     plt.xlim(FLAGS.start_time, FLAGS.end_time)
     plt.xticks([x for x in range(FLAGS.start_time, FLAGS.end_time, 5000)],
