@@ -21,6 +21,9 @@ gflags.DEFINE_string('end_tag', '', 'Name of end the event')
 gflags.DEFINE_string('ftmanager_log_paths', '',
                      'Comma-separated list of paths to ftmanager log files.')
 gflags.DEFINE_string("xlabels", '', 'list of xlabels')
+gflags.DEFINE_string("xlabel_name", 'Number of processing vertices', 'xlabel')
+gflags.DEFINE_integer('max_x', 10000, '')
+gflags.DEFINE_integer('x_increment', 1000, '')
 
 def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
     logfile = open(ftmanager_log_path)
@@ -74,13 +77,13 @@ def plot_rollback_duration(durations, labels, colors):
                  color=colors[0], marker='o', mfc='none',
                  markersize=4, mec=colors[0], mew=1.0, lw=1.0)
 
-    plt.xlim(0, 10000)
+    plt.xlim(0, FLAGS.max_x)
     plt.ylim(0, 5)
-    plt.xticks([x for x in range(1000, 10001, 1000)],
+    plt.xticks([x for x in range(0, FLAGS.max_x + 1, FLAGS.x_increment)],
                rotation='45', ha='right')
     plt.yticks(range(0, 5000001, 1000000), range(0, 6, 1))
     plt.ylabel("Max span algorithm runtime [sec]")
-    plt.xlabel("Number of processing vertices")
+    plt.xlabel(FLAGS.xlabel_name)
     plt.savefig("rollback_computation_lines.pdf",
                 format="pdf", bbox_inches="tight")
 
@@ -101,6 +104,7 @@ def main(argv):
         elif 'differential' in manager_path:
             colors.append('b')
         durations.append(get_action_duration(manager_path, FLAGS.begin_tag, FLAGS.end_tag))
+        print durations[-1]
 
     print len(durations)
     plot_rollback_duration(durations, xlabels, colors)

@@ -10,4 +10,4 @@
 ./generate_cc_selective_speedup_lines.sh
 
 ./generate_rollback_computation_box_and_whiskers.sh
-./generate_rollback_computation_lines.sh
+./generate_rollback_computation_edges_lines.sh

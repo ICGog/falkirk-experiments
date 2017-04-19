@@ -29,7 +29,10 @@ def get_runtime(runtime_file_path, num_proc, ft_type):
     runtime_file.close()
     return runtimes
 
-def plot_slowdowns(plot_file_name, slowdowns, num_procs):
+def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
+    colors = {'Naiad':'r', 'Naiad SRS':'b'}
+    markers = {'Naiad':'^', 'Naiad SRS':'o'}
+
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
@@ -37,24 +40,35 @@ def plot_slowdowns(plot_file_name, slowdowns, num_procs):
         plt.figure()
         set_rcs()
 
-    plt.plot(num_procs, slowdowns, label='Naiad SRS', color='b', marker='o',
-             mfc='none', markersize=4, mec='b', mew=1.0, lw=1.0)
+    for setup, setup_runtimes in runtimes.iteritems():
+        data = []
+        for num_proc, proc_runtimes in setup_runtimes.iteritems():
+            proc_speedups = [base_runtime / x for x in proc_runtimes]
+            data.append((num_proc, (np.mean(proc_speedups), np.std(proc_speedups))))
+        data.sort()
+        sort_num_roc, avg_std = zip(*data)
+        speedups, stds = zip(*avg_std)
+        print num_procs
+        plt.errorbar(num_procs, speedups, stds,
+                     label=setup, color=colors[setup], marker=markers[setup],
+                     mfc='none', markersize=4, mec=colors[setup], mew=1.0,
+                     lw=1.0)
 
-    plt.axhline(1.0, linestyle=':', color='k', lw=0.5)
+#    plt.axhline(1.0, linestyle=':', color='k', lw=0.5)
 
-    max_y_val = 1.51
+    max_y_val = 5.01
     plt.ylim(0, max_y_val)
-    plt.ylabel("Slowdown vs. Naiad")
+    plt.ylabel("Speedup vs. Naiad 5 computers")
     yticks = []
     x = 0
     while x < max_y_val:
         yticks.append(x)
-        x += 0.25
+        x += 1.0
     plt.yticks(yticks)
     plt.xlim(num_procs[0], num_procs[-1])
     plt.xticks(num_procs, [str(x) for x in num_procs])
     plt.xlabel("Number of computers")
-    plt.legend(loc='upper right', frameon=False, handlelength=1.5,
+    plt.legend(loc='upper left', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
 #    leg = plt.legend(loc='upper right', handlelength=1.0, handletextpad=0.3)
@@ -84,13 +98,17 @@ def main(argv):
         runtimes['Naiad SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                                 num_proc,
                                                                 'length_1_incremental'))
-    slowdowns = []
-    for num_proc in num_procs:
-        avg_srs = np.mean(runtimes['Naiad SRS'][int(num_proc)])
-        avg_naiad = np.mean(runtimes['Naiad'][int(num_proc)])
-        slowdowns.append(avg_srs / avg_naiad)
-    print slowdowns
-    plot_slowdowns('cc_slowdown_lines.pdf', slowdowns, [int(x) for x in num_procs])
+    speedups_srs = []
+    speedups_naiad = []
+    base = np.mean(runtimes['Naiad'][int(num_procs[0])])
+
+    # for num_proc in num_procs:
+    #     avg_srs = np.mean(runtimes['Naiad SRS'][int(num_proc)])
+    #     avg_naiad = np.mean(runtimes['Naiad'][int(num_proc)])
+    #     speedups_srs.append(base / avg_srs)
+    #     speedups_naiad.append(base / avg_naiad)
+    # speedups = [speedups_srs, speedups_naiad]
+    plot_speedups('cc_speedup_lines.pdf', base, runtimes, [int(x) for x in num_procs])
 
 
 if __name__ == '__main__':
