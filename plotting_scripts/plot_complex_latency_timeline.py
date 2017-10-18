@@ -28,6 +28,7 @@ def get_rollback_events(input_file_path):
     workers_paused = []
     workers_failed = []
     workers_rollback = []
+    worker_recovered = []
     for row in controller_file.readlines():
         fields = [x.strip() for x in row.split(' ')]
         if fields[1] == 'WPR':
@@ -39,7 +40,10 @@ def get_rollback_events(input_file_path):
         elif fields[1] == 'RTF':
             # Restore to Frontier
             workers_rollback.append(int(fields[2]) / 1000)
-    return (workers_failed, workers_paused, workers_rollback)
+        elif fields[1] == 'P':
+            # Processor recovered
+            worker_recovered.append(int(fields[8]) / 1000)
+    return (workers_failed, workers_paused, workers_rollback, worker_recovered)
 
 
 def get_input_latency(input_file_path):
@@ -100,18 +104,25 @@ def get_fast_latency(input_file_path):
 
 def plot_latencies(plot_file_name, (latencies, event_times),
                    (fast_latencies, slow_staleness, cc_staleness, fast_event_times),
-                   (workers_failed, workers_paused, workers_rollback)):
-    colors = {'fast':'b', 'input slow':'r', 'input cc':'y'}
+                   (workers_failed, workers_paused, workers_rollback, workers_recovered)):
+    if FLAGS.paper_mode:
+        plt.figure(figsize=(8, 2.75))
+        set_paper_rcs()
+    else:
+        plt.figure()
+        set_rcs()
+
+    colors = {'fast':'c', 'input slow':'r', 'input cc':'y'}
     markers = {'fast':'^', 'input slow':'o', 'input cc':'+'}
 
-    plt.plot(event_times, [x / 1000.0 for x in latencies], label='Stable latency [sec]',
-             color='y', marker='o', mfc='none', mec='y', mew=1.0, lw=1.0)
+    plt.plot(event_times, [x / 1000.0 for x in latencies], label='Input stable latency [sec]',
+             color='y', marker='+', markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
 
     plot_label = 'fast'
     plt.plot(fast_event_times, [x / 1000.0 for x in fast_latencies],
              label='Query latency [sec]', color=colors[plot_label],
-             marker=markers[plot_label], mfc='none', mec=colors[plot_label],
-             mew=1.0, lw=1.0)
+             marker=markers[plot_label], mfc='none', markersize=4,
+             mec=colors[plot_label], mew=1.0, lw=1.0)
 
     # plot_label = 'input slow'
     # plt.plot(event_times, [x / 1000.0 for x in slow_staleness],
@@ -126,24 +137,35 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     #          mew=1.0, lw=1.0)
 
     duration = (FLAGS.end_time - FLAGS.start_time)
-    rollback_computed_loc = float(workers_rollback[-1] - FLAGS.start_time) / float(duration)
-    print rollback_computed_loc
-    plt.axvspan(workers_failed[0], workers_paused[-1], lw=0, color='0.8')
 
-    plt.annotate('', xy=(rollback_computed_loc, 0.0), xycoords='axes fraction',
-                 xytext=(0, 350), textcoords='offset points',
-                 arrowprops=dict(arrowstyle="-"), ha='left')
+    last_worker_pause = np.max(workers_paused)
+    last_worker_rollback = np.max(workers_rollback)
+    first_worker_failure = np.min(workers_failed)
+    last_worker_recovered = np.max(workers_recovered)
 
+    print first_worker_failure, last_worker_pause, last_worker_rollback
+
+    plt.axvline(first_worker_failure, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_pause, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_rollback, linestyle=':', color='k', lw=0.5)
+    plt.axvline(last_worker_recovered, linestyle=':', color='k', lw=0.5)
+    plt.annotate('First\nfailure', xy=(first_worker_failure - 100, 3),
+                 xycoords='data', verticalalignment='left', ha='right')
+    plt.annotate('Workers\npaused', xy=(last_worker_pause - 100, 5),
+                 xycoords='data', verticalalignment='right', ha='right')
+    plt.annotate('Rollback\ncomputed', xy=(last_worker_rollback + 100, 10),
+                 xycoords='data', verticalalignment='left', ha='left')
+    plt.annotate('Input processors recovered', xy=(last_worker_recovered + 100, 14),
+                 xycoords='data', verticalalignment='left', ha='left')
 
     plt.ylabel('Latency [sec]')
-    plt.ylim(0, 10)
+    plt.ylim(0, 16)
 #    plt.yticks()
-    plt.xlabel('Runtime [sec]')
+    plt.xlabel('Experiment time [sec]')
 
-    max_event_time = np.max(event_times)
-    plt.xlim(FLAGS.start_time, max_event_time)
-    plt.xticks([x for x in range(FLAGS.start_time, max_event_time, 5000)],
-               [str(x / 1000) for x in range(FLAGS.start_time, max_event_time, 5000)])
+    plt.xlim(FLAGS.start_time, FLAGS.end_time)
+    plt.xticks([x for x in range(FLAGS.start_time, FLAGS.end_time, 5000)],
+               [str(x / 1000) for x in range(FLAGS.start_time, FLAGS.end_time, 5000)])
     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
@@ -161,6 +183,11 @@ def main(argv):
                    get_input_latency(FLAGS.input_latency_file_path),
                    get_fast_latency(FLAGS.fast_latency_file_path),
                    get_rollback_events(FLAGS.controller_file_path))
+    # plot_latencies('complex_latency_timeline.pdf',
+    #                get_input_latency(FLAGS.input_latency_file_path),
+    #                get_fast_latency(FLAGS.fast_latency_file_path),
+    #                ([], [], []))
+
 
 
 if __name__ == '__main__':
