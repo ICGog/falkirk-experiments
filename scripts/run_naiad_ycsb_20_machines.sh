@@ -1,0 +1,2 @@
+#!/bin/bash
+parallel-ssh -v -h ~/caelum_20_machines -t 0 -p 25 -i 'PROCID=`./falkirk-experiments/scripts/get_falkirk_proc_id.sh` ; cd falkirk/Naiad/ ; ./FaultToleranceExamples/bin/Release/FaultToleranceExamples.exe ycsbdd -ycsbconfigfile /home/srguser/streaming-benchmarks-yahoo/conf/localConf.yaml -minimallog -t 10 -n 20 -p $PROCID -h @/home/${USER}/machines_20 -loadtarget 100000 -timeslice 1000 -numelements 6000000 &> ycsb-caelum-$PROCID.log'
