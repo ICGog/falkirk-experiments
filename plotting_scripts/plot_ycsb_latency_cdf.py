@@ -14,29 +14,37 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
+gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
 
 
 def get_latencies(log_path, offset):
     print '--------------- ' + log_path + ' ----------------'
     latencies = []
+    times = []
     windowTimes = set({})
     logfile = open(log_path)
+    lastwindowTime = 0
     for row in logfile.readlines():
         fields = [x.strip() for x in row.split(' ')]
         windowTimes.add(int(fields[0]))
-        if len(windowTimes) < 4:
+        if len(windowTimes) < 3:
             continue
+        lastWindowTime = int(fields[0])
+        times.append(int(fields[0]))
         latency = int(fields[1])
         if latency - offset > 0:
             latencies.append(latency - offset)
         else:
             latencies.append(0)
+    while times[-1] == lastWindowTime:
+        times = times[:-1]
+        latencies = latencies[:-1]
     logfile.close()
     return latencies
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'b', 'Flink' : 'm'}
+    colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
         plt.figure(figsize=(3.33, 2.22))
@@ -82,22 +90,27 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
                                       normed=True, cumulative=True,
                                       histtype="step", color=colors[labels[index]])
         # hack to add line to legend
-        # plt.plot([-100], [-100], label=labels[index],
-        #          color=colors[index], linestyle='solid', lw=1.0)
+        plt.plot([-100], [-100], label=labels[index],
+                 color=colors[labels[index]], linestyle='solid', lw=1.0)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 
         index += 1
 
+    if FLAGS.exactly_once:
+        lat_increment = 300
+    else:
+        lat_increment = 100
+
     plt.xlim(0, max_cdf_val)
-    plt.xticks(range(0, max_cdf_val, 100),
-               [str(x) for x in range(0, max_cdf_val, 100)])
+    plt.xticks(range(0, max_cdf_val, lat_increment),
+               [str(x) for x in range(0, max_cdf_val, lat_increment)])
     plt.ylim(0, 1.0)
     plt.yticks(np.arange(0.0, 1.01, 0.2),
                [str(x) for x in np.arange(0.0, 1.01, 0.2)])
     plt.ylabel("CDF of final event latencies")
     plt.xlabel(label_axis)
-    plt.legend(loc=4, frameon=False, handlelength=2.5, handletextpad=0.2)
+    plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2,)
 
     plt.savefig("%s.pdf" % plot_file_name,
                 format="pdf", bbox_inches="tight")
@@ -112,14 +125,30 @@ def main(argv):
     labels = FLAGS.labels.split(',')
     latencies = []
     index = 0
+    flink = []
+    drizzle = []
+    naiad = []
     for log_path in log_paths:
         if 'Flink' in labels[index]:
-            latencies.append(get_latencies(log_path, 0))
+            flink = flink + get_latencies(log_path, 0)
+        elif 'Drizzle' in labels[index]:
+            drizzle = drizzle + get_latencies(log_path, 10000)
+        elif 'Naiad' in labels[index]:
+            naiad = naiad + get_latencies(log_path, 10000)
         else:
-            latencies.append(get_latencies(log_path, 10000))
+            print("Unkown label %s" % (labels[index]))
         index = index + 1
-
-    plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', labels, bin_width=1)
+    new_labels = []
+    if len(flink) > 0:
+        new_labels.append("Flink")
+        latencies.append(flink)
+    if len(drizzle) > 0:
+        new_labels.append("Drizzle")
+        latencies.append(drizzle)
+    if len(naiad) > 0:
+        new_labels.append("Naiad + SRS")
+        latencies.append(naiad)
+    plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
 
 
 if __name__ == '__main__':

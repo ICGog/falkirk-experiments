@@ -15,10 +15,12 @@ FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
+gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
 
-def get_latencies(log_path, offset):
+def get_latencies(log_path, offset, low_skip, high_skip):
     print '--------------- ' + log_path + ' ----------------'
     latencies = {}
+    tlatencies = {}
     windowTimes = set({})
     logfile = open(log_path)
     lastIgnoredTime = 0
@@ -26,7 +28,7 @@ def get_latencies(log_path, offset):
         fields = [x.strip() for x in row.split(' ')]
         windowTime = int(fields[0])
         windowTimes.add(windowTime)
-        if len(windowTimes) < 4:
+        if len(windowTimes) < low_skip or len(windowTimes) > high_skip:
             lastIgnoredTime = windowTime
             continue
         latency = int(fields[1])
@@ -34,22 +36,53 @@ def get_latencies(log_path, offset):
         if latency - offset > 0:
             latOffset = latency - offset
         curTime = windowTime - lastIgnoredTime
-        if curTime in latencies:
-            latencies[curTime] = max(latencies[curTime], latOffset)
+        if curTime in tlatencies:
+            tlatencies[curTime].append(latOffset)
         else:
-            latencies[curTime] = latOffset
+            tlatencies[curTime] = [latOffset]
     logfile.close()
-    keylist = latencies.keys()
+    keylist = tlatencies.keys()
     keylist.sort()
-    times = []
     maxLatency = []
     for key in keylist:
-        times.append(key)
-        maxLatency.append(latencies[key])
-    return (times, maxLatency)
+        maxLatency.append(tlatencies[key])
+    return maxLatency[:-1]
 
-def plot_latencies(plot_file_name, times, latencies, labels):
-    colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'b', 'Flink' : 'm'}
+
+# def get_latencies(log_path, offset):
+#     print '--------------- ' + log_path + ' ----------------'
+#     latencies = {}
+#     windowTimes = set({})
+#     logfile = open(log_path)
+#     lastIgnoredTime = 0
+#     for row in logfile.readlines():
+#         fields = [x.strip() for x in row.split(' ')]
+#         windowTime = int(fields[0])
+#         windowTimes.add(windowTime)
+#         if len(windowTimes) < 3:
+#             lastIgnoredTime = windowTime
+#             continue
+#         latency = int(fields[1])
+#         latOffset = 0
+#         if latency - offset > 0:
+#             latOffset = latency - offset
+#         curTime = windowTime - lastIgnoredTime
+#         if curTime in latencies:
+#             latencies[curTime] = max(latencies[curTime], latOffset)
+#         else:
+#             latencies[curTime] = latOffset
+#     logfile.close()
+#     keylist = latencies.keys()
+#     keylist.sort()
+#     times = []
+#     maxLatency = []
+#     for key in keylist:
+#         times.append(key)
+#         maxLatency.append(latencies[key])
+#     return (times, maxLatency)
+
+def plot_latencies(plot_file_name, latencies, labels):
+    colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
     markers = {'Naiad + SRS': '^', 'Drizzle' : '+', 'Spark' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
@@ -57,26 +90,64 @@ def plot_latencies(plot_file_name, times, latencies, labels):
     else:
         plt.figure()
         set_rcs()
-    max_y_val = 0
+    max_y_val = 10000
     max_x_val = 0
 
     index = 0
-    for curTimes in times:
-        max_y_val = max(max_y_val, np.max(latencies[index]))
-        max_x_val = max(max_x_val, np.max(curTimes))
-        plt.plot(curTimes, latencies[index], label=labels[index], color=colors[labels[index]],
-                 marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                 mew=1.0, lw=1.0)
-        index = index + 1
+    for lat in latencies:
+#        max_y_val = max(max_y_val, np.max(latencies[index]))
+#        max_x_val = max(max_x_val, np.max(curTimes))
+        print len(latencies[index])
+        lat_mean = []
+        lat_std = []
+        for lats in latencies[index]:
+            lat_mean.append(np.mean(lats))
+            lat_std.append(np.std(lats))
 
-    plt.ylabel('Latency [msec]')
-    plt.ylim(0, max_y_val + 1000)
-    plt.xlim(0, max_x_val)
-    plt.xticks([x for x in range(0, max_x_val + 1, 30000)],
-               [str(x / 1000) for x in range(0, max_x_val + 1, 30000)])
+        if FLAGS.error_bars:
+            plt.errorbar([x for x in range(150, 359, 10)], lat_mean, lat_std,
+                         label=labels[index], color=colors[labels[index]],
+                         marker=markers[labels[index]], mfc='none',
+                         mec=colors[labels[index]],
+                         mew=0.7, lw=1.0, markersize=4)
+        else:
+            plt.plot([x for x in range(150, 359, 10)],
+                     lat_mean, label=labels[index], color=colors[labels[index]],
+                     marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
+                     mew=0.7, lw=1.0, markersize=4)
+
+        # hack to add line to legend
+        # plt.plot([-100], [-100], label=labels[index],
+        #          color=colors[labels[index]], linestyle='solid', lw=1.0)
+
+        index = index + 1
+#    plt.yscale("log")
+    plt.ylabel('Final event latency [msec]')
+    max_y = 0
+    if FLAGS.error_bars:
+        max_y = 3601
+    else:
+        max_y = 2401
+    plt.ylim(0, max_y - 1)
+    # time_val = 50
+    # y_ticks = []
+    # while time_val <= max_y_val:
+    #   y_ticks.append(time_val)
+    #   y_ticks.append(time_val * 2)
+    #   y_ticks.append(time_val * 5)
+    #   time_val *= 10
+    # y_ticks.append(time_val)
+
+
+    y_ticks = [x for x in range(0, max_y, 400)]
+    plt.yticks(y_ticks, [str(x) for x in y_ticks])
+
+    plt.xlim(150, 350)
+    plt.xticks([x for x in range(150, 351, 20)],
+               [str(x) for x in range(150, 351, 20)])
     plt.xlabel("Time [sec]")
-    plt.legend(loc='upper right', frameon=False, handlelength=1.5,
-               handletextpad=0.1, numpoints=1)
+    plt.legend(loc='upper right', frameon=False, handlelength=2.5,
+               handletextpad=0.2, numpoints=1)
 
     plt.savefig("%s.pdf" % plot_file_name,
                 format="pdf", bbox_inches="tight")
@@ -92,21 +163,55 @@ def main(argv):
     log_paths = FLAGS.log_paths.split(',')
     labels = FLAGS.labels.split(',')
     latencies = []
+    flink = []
+    drizzle = []
+    naiad = []
     index = 0
-    latencies = []
-    times = []
     for log_path in log_paths:
         offset = 0
         if 'Flink' in labels[index]:
             offset = 0
         else:
             offset = 10000
-        (exTimes, exLatencies) = get_latencies(log_path, offset)
-        times.append(exTimes)
-        latencies.append(exLatencies)
+        if 'Flink' in labels[index]:
+            lats = get_latencies(log_path, offset, 14, 35)
+            if len(flink) < 1:
+                flink = lats
+            else:
+                lindex = 0
+                for lat in lats:
+                    flink[lindex] = flink[lindex] + lat
+                    lindex = lindex + 1
+        elif 'Drizzle' in labels[index]:
+            lats = get_latencies(log_path, offset, 13, 34)
+            if len(drizzle) < 1:
+                drizzle = lats
+            else:
+                lindex = 0
+                for lat in lats:
+                    drizzle[lindex] = drizzle[lindex] + lat
+                    lindex = lindex + 1
+        elif 'Naiad' in labels[index]:
+            lats = get_latencies(log_path, offset, 14, 35)
+            if len(naiad) < 1:
+                naiad = lats
+            else:
+                lindex = 0
+                for lat in lats:
+                    naiad[lindex] = naiad[lindex] + lat
+                    lindex = lindex + 1
         index = index + 1
-
-    plot_latencies('ycsb_ft_latency_timeline', times, latencies, labels)
+    new_labels = []
+    if len(flink) > 0:
+        new_labels.append("Flink")
+        latencies.append(flink)
+    if len(drizzle) > 0:
+        new_labels.append("Drizzle")
+        latencies.append(drizzle)
+    if len(naiad) > 0:
+        new_labels.append("Naiad + SRS")
+        latencies.append(naiad)
+    plot_latencies('ycsb_ft_latency_timeline', latencies, new_labels)
 
 
 if __name__ == '__main__':
