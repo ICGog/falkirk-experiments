@@ -1,0 +1,2 @@
+#!/bin/bash
+parallel-ssh -v -h ~/caelum_20_machines -t 0 -p 25 -i 'PROCID=`./falkirk-experiments/scripts/get_falkirk_proc_id.sh` ; cd falkirk/Naiad/ ; ./FaultToleranceExamples/bin/Release/FaultToleranceExamples.exe connected-components -logprefix /tmp/falkirk -nodecount 100000000 -edgecount 75000000 -changesperepoch 100 -numepochstorun 10 -nofaulttolerance -t 8 -n 20 -p $PROCID -h @/home/${USER}/machines_20 &> cc-caelum-$PROCID.log'
