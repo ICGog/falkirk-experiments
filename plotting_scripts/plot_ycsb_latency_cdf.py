@@ -47,7 +47,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3.33, 2.22))
+        plt.figure(figsize=(3, 2))
         set_paper_rcs()
     else:
         plt.figure()
@@ -100,7 +100,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     if FLAGS.exactly_once:
         lat_increment = 300
     else:
-        lat_increment = 100
+        lat_increment = 200
 
     plt.xlim(0, max_cdf_val)
     plt.xticks(range(0, max_cdf_val, lat_increment),

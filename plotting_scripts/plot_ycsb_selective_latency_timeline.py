@@ -139,7 +139,7 @@ def plot_latencies(plot_file_name, latencies, labels):
 
         index = index + 1
 #    plt.yscale("log")
-#    plt.ylabel('Final event latency [msec]')
+    plt.ylabel('Final event latency [ms]')
     max_y = 0
     if FLAGS.error_bars:
         max_y = 1201

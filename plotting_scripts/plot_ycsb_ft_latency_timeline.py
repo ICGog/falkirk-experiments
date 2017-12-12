@@ -16,6 +16,7 @@ gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
+gflags.DEFINE_bool('log_scale', False, 'Plot log scale.')
 
 def get_latencies(log_path, offset, low_skip, high_skip):
     print '--------------- ' + log_path + ' ----------------'
@@ -90,7 +91,7 @@ def plot_latencies(plot_file_name, latencies, labels):
     else:
         plt.figure()
         set_rcs()
-    max_y_val = 10000
+    max_y_val = 10001
     max_x_val = 0
 
     index = 0
@@ -109,7 +110,7 @@ def plot_latencies(plot_file_name, latencies, labels):
                          label=labels[index], color=colors[labels[index]],
                          marker=markers[labels[index]], mfc='none',
                          mec=colors[labels[index]],
-                         mew=0.7, lw=1.0, markersize=4)
+                         mew=0.02, lw=0.7, markersize=3)
         else:
             plt.plot([x for x in range(150, 359, 10)],
                      lat_mean, label=labels[index], color=colors[labels[index]],
@@ -121,33 +122,38 @@ def plot_latencies(plot_file_name, latencies, labels):
         #          color=colors[labels[index]], linestyle='solid', lw=1.0)
 
         index = index + 1
-#    plt.yscale("log")
-    plt.ylabel('Final event latency [msec]')
-    max_y = 0
-    if FLAGS.error_bars:
-        max_y = 3601
+    plt.ylabel('Final event latency [ms]')
+    if FLAGS.log_scale is False:
+        if FLAGS.error_bars:
+            max_y_val = 3601
+        else:
+            max_y_val = 2401
+    plt.ylim(1, max_y_val - 1)
+    y_ticks = []
+    if FLAGS.log_scale:
+        plt.yscale("log")
+        time_val = 1
+        while time_val <= max_y_val:
+            y_ticks.append(time_val)
+            #  y_ticks.append(time_val * 2)
+            #  y_ticks.append(time_val * 5)
+            time_val *= 10
+        # y_ticks.append(time_val)
     else:
-        max_y = 2401
-    plt.ylim(0, max_y - 1)
-    # time_val = 50
-    # y_ticks = []
-    # while time_val <= max_y_val:
-    #   y_ticks.append(time_val)
-    #   y_ticks.append(time_val * 2)
-    #   y_ticks.append(time_val * 5)
-    #   time_val *= 10
-    # y_ticks.append(time_val)
+        y_ticks = [x for x in range(0, max_y_val, 400)]
 
-
-    y_ticks = [x for x in range(0, max_y, 400)]
     plt.yticks(y_ticks, [str(x) for x in y_ticks])
 
     plt.xlim(150, 350)
-    plt.xticks([x for x in range(150, 351, 20)],
-               [str(x) for x in range(150, 351, 20)])
+    plt.xticks([x for x in range(150, 351, 50)],
+               [str(x) for x in range(150, 351, 50)])
     plt.xlabel("Time [sec]")
-    plt.legend(loc='upper right', frameon=False, handlelength=2.5,
-               handletextpad=0.2, numpoints=1)
+    if FLAGS.log_scale:
+        plt.legend(loc='lower right', frameon=False, handlelength=2.0,
+                       handletextpad=0.2, numpoints=1)
+    else:
+        plt.legend(loc='upper right', frameon=False, handlelength=2.0,
+                       handletextpad=0.2, numpoints=1)
 
     plt.savefig("%s.pdf" % plot_file_name,
                 format="pdf", bbox_inches="tight")
