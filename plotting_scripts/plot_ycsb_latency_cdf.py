@@ -47,7 +47,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(2.25, 1.5))
         set_paper_rcs()
     else:
         plt.figure()

@@ -88,7 +88,7 @@ def plot_latencies(plot_file_name, latencies, labels):
     colors = {'Naiad + SRS + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Flink' : 'b'}
     markers = {'Naiad + SRS + Selective': '^', 'Drizzle' : '+', 'Naiad + SRS' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
-        plt.figure(figsize=(1.5, 1))
+        plt.figure(figsize=(3, 2))
         set_paper_rcs()
     else:
         plt.figure()
