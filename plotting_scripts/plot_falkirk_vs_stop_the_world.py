@@ -84,11 +84,16 @@ def get_fast_latency(input_file_path):
 def plot_latencies(latencies, labels):
     colors = ['y', 'm', 'b', 'm', 'b', 'm', 'b']
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
     else:
         plt.figure()
         set_rcs()
+
+    print np.mean(latencies[0])
+    print np.mean(latencies[1])
+    print np.mean(latencies[2])
+    print np.mean(latencies[3])
 
     ax = plt.gca()
     bp = percentile_box_plot(ax, latencies, color=colors, box_lw=1.0,

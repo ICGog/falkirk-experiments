@@ -34,7 +34,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
     markers = {'Naiad':'^', 'Naiad SRS':'o'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
     else:
         plt.figure()
@@ -58,7 +58,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
 
     max_y_val = 5.01
     plt.ylim(0, max_y_val)
-    plt.ylabel("Speedup vs. Naiad 5 computers")
+    plt.ylabel("Speedup vs.\nNaiad 5 computers")
     yticks = []
     x = 0
     while x < max_y_val:
@@ -77,7 +77,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
 #    fr.set_fill(None)
 
     plt.savefig(plot_file_name, format='pdf',
-                bbox_inches='tight', pad_inches=0.01)
+                bbox_inches='tight', pad_inches=0.003)
 
 
 def main(argv):

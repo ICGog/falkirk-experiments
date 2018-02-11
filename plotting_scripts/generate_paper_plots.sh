@@ -5,6 +5,7 @@
 ./generate_complex_latency_falkirk_vs_stop_the_world.sh
 
 ./generate_cc_falkirk_slowdown_lines.sh
+./generate_cc_falkirk_speedup_lines.sh
 
 ./generate_cc_selective_runtime_lines.sh
 ./generate_cc_selective_speedup_lines.sh

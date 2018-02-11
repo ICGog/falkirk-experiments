@@ -51,7 +51,7 @@ def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
 
 def plot_rollback_duration(durations, labels, colors):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
     else:
         plt.figure()
@@ -77,15 +77,25 @@ def plot_rollback_duration(durations, labels, colors):
                  color=colors[0], marker='o', mfc='none',
                  markersize=4, mec=colors[0], mew=1.0, lw=1.0)
 
+    xvals = []
+    xlabels = []
+    xval = 0
+    while xval <= FLAGS.max_x:
+        if xval == 0:
+            xlabels.append('0')
+        else:
+            xlabels.append(str(xval / 1000) +'k')
+        xval += FLAGS.x_increment
+
     plt.xlim(0, FLAGS.max_x)
-    plt.ylim(0, 5)
+    plt.ylim(0, 4)
     plt.xticks([x for x in range(0, FLAGS.max_x + 1, FLAGS.x_increment)],
-               rotation='45', ha='right')
-    plt.yticks(range(0, 5000001, 1000000), range(0, 6, 1))
-    plt.ylabel("Max span algorithm runtime [sec]")
+               xlabels)#, ha='right')
+    plt.yticks(range(0, 4000001, 1000000), range(0, 5, 1))
+    plt.ylabel("Max span algo. runtime [sec]")
     plt.xlabel(FLAGS.xlabel_name)
     plt.savefig("rollback_computation_lines.pdf",
-                format="pdf", bbox_inches="tight")
+                format="pdf", bbox_inches="tight", pad_inches=0.003)
 
 
 def main(argv):

@@ -17,12 +17,17 @@ gflags.DEFINE_string('runtime_file_path', '',
                      'Path to the runtime file.')
 gflags.DEFINE_string("num_procs", '', 'Comma-separated list of procs')
 
-def get_runtime(runtime_file_path, num_proc, ft_type):
+def get_runtime(runtime_file_path, num_proc, ft_types):
     runtime_file = open(runtime_file_path)
     proc_tag = "_" + num_proc + "_procs"
     runtimes = []
     for row in runtime_file.readlines():
-        if proc_tag in row and ft_type in row:
+        keep = False
+        for ft_type in ft_types:
+            if ft_type in row:
+                keep = True
+        if proc_tag in row and keep:
+#        if proc_tag in row and ft_type in row:
             fields = [x.strip() for x in row.split(' ')]
             runtime = int(fields[2])
             runtimes.append(runtime)
@@ -71,7 +76,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
                'Naiad SRS eager + span': 'v',
                'Naiad SRS eager': '<'}
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
     else:
         plt.figure()
@@ -85,7 +90,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
         data.sort()
         sort_num_roc, avg_std = zip(*data)
         speedups, stds = zip(*avg_std)
-        print num_procs
+        print speedups, stds
         plt.errorbar(num_procs, speedups, stds,
                      label=setup, color=colors[setup], marker=markers[setup],
                      mfc='none', markersize=4, mec=colors[setup], mew=1.0,
@@ -93,7 +98,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
 
     max_y_val = 5.01
     plt.ylim(0, max_y_val)
-    plt.ylabel("Speedup vs. Naiad SRS 5 computers")
+    plt.ylabel("Speedup vs.\n Naiad SRS 5 computers")
     yticks = []
     x = 0
     while x < max_y_val:
@@ -107,7 +112,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
                handletextpad=0.1, numpoints=1)
 
     plt.savefig(plot_file_name, format='pdf',
-                bbox_inches='tight', pad_inches=0.01)
+                bbox_inches='tight', pad_inches=0.003)
 
 
 
@@ -138,7 +143,7 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
         data.sort()
         sort_num_roc, avg_std = zip(*data)
         run_times, stds = zip(*avg_std)
-        print num_procs
+        print run_times, stds
         plt.errorbar(num_procs, run_times, stds,
                      label=setup, color=colors[setup], marker=markers[setup],
                      mfc='none', markersize=4, mec=colors[setup], mew=1.0, lw=1.0)
@@ -180,11 +185,11 @@ def main(argv):
             runtimes[setup][int(num_proc)] = []
     for num_proc in num_procs:
         runtimes['Naiad SRS w/o selective'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
-                                                                 num_proc,
-                                                                 'length_1_sync'))
+                                                                              num_proc,
+                                                                              ['length_1_sync1', 'length_1_sync2', 'length_1_sync3' 'length_1_sync4' 'length_1_sync5']))
         runtimes['Naiad SRS'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
                                                                 num_proc,
-                                                                'length_1_incremental'))
+                                                                ['sync_after_epoch_0_incremental']))
 
         # runtimes['Naiad SRS eager'][int(num_proc)].append(get_runtime(FLAGS.runtime_file_path,
         #                                                                      num_proc,
@@ -193,12 +198,16 @@ def main(argv):
         #                                                                      num_proc,
         #                                                                      'threads_eagerly'))
     base = np.mean(runtimes['Naiad SRS'][int(num_procs[0])])
-
     # speedups = []
     # for num_proc in num_procs:
     #     avg_srs_selective = np.mean(runtimes['Naiad SRS'][int(num_proc)])
     #     avg_srs = np.mean(runtimes['Naiad SRS w/o selective'][int(num_proc)])
     #     speedups.append(avg_srs / avg_srs_selective)
+
+    for num_proc in num_procs:
+        avg_srs_selective = np.mean(runtimes['Naiad SRS'][int(num_proc)])
+        avg_srs = np.mean(runtimes['Naiad SRS w/o selective'][int(num_proc)])
+        print (avg_srs - avg_srs_selective) / avg_srs * 100.0
 
     plot_speedups('cc_selective_speedup_lines.pdf', base, runtimes, [int(x) for x in num_procs])
 #    print runtimes

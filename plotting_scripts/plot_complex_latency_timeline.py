@@ -106,7 +106,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
                    (fast_latencies, slow_staleness, cc_staleness, fast_event_times),
                    (workers_failed, workers_paused, workers_rollback, workers_recovered)):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(8, 2.75))
+        plt.figure(figsize=(8, 2))
         set_paper_rcs()
     else:
         plt.figure()
@@ -155,7 +155,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
                  xycoords='data', verticalalignment='right', ha='right')
     plt.annotate('Rollback\ncomputed', xy=(last_worker_rollback + 100, 10),
                  xycoords='data', verticalalignment='left', ha='left')
-    plt.annotate('Input processors recovered', xy=(last_worker_recovered + 100, 14),
+    plt.annotate('Processors recovered', xy=(last_worker_recovered + 100, 13),
                  xycoords='data', verticalalignment='left', ha='left')
 
     plt.ylabel('Latency [sec]')
