@@ -22,6 +22,7 @@ gflags.DEFINE_string('stw_fast_latency_file_path', '',
                      'Path to the file containing fast latencies.')
 gflags.DEFINE_integer('start_time', 0, 'Start time')
 gflags.DEFINE_integer('end_time', sys.maxint, 'End time')
+gflags.DEFINE_string('plot_format', 'pdf', 'Plot file format')
 
 
 def get_input_latency(input_file_path):
@@ -114,9 +115,8 @@ def plot_latencies(latencies, labels):
     plt.ylim(0, 25000)
     plt.yticks(range(0, 25001, 4000), range(0, 26, 4))
     plt.ylabel("Latency [sec]")
-    plt.savefig("complex_latency_falkirk_vs_stw.pdf",
-                format="pdf", bbox_inches="tight", pad_inches=0.003)
-
+    plt.savefig("complex_latency_falkirk_vs_stw." + FLAGS.plot_format,
+                format=FLAGS.plot_format, bbox_inches="tight", pad_inches=0.003)
 
 
 def main(argv):
