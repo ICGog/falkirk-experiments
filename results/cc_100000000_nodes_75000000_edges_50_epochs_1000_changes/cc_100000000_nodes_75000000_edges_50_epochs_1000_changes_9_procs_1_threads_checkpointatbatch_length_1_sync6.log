@@ -1,0 +1,2390 @@
+Logging initialized to console
+Connected components on a random graph (100000000 nodes, 75000000 edges)
+Aggregator[0]
+<<
+>>
+Centralizer[1]
+<<
+>>
+Consumer[2]
+<<
+>>
+__Input0[5]
+<<
+>> Join[56] Join[76]
+__Input1[6]
+<<
+>> Select[10] Join[39] Join[105]
+__Input2[7]
+<<
+>> Join[67]
+__Input3[8]
+<<
+>> Join[87]
+__Input4[9]
+<<
+>> Join[26]
+Select[10]
+<< __Input1[6]
+>> Combiner[12]
+Combiner[12]
+<< Select[10]
+>> Combiner[14]
+Combiner[14]
+<< Combiner[12]
+>> SelectMany[16]
+SelectMany[16]
+<< Combiner[14]
+>> Where[18] Where[54] Where[74] Concat[126]
+Where[18]
+<< SelectMany[16]
+>> Select[20]
+Select[20]
+<< Where[18]
+>> Combiner[22]
+Combiner[22]
+<< Select[20]
+>> Combiner[24]
+Combiner[24]
+<< Combiner[22]
+>> Join[26]
+Join[26]
+<< __Input4[9] Combiner[24]
+>> Where[29]
+Where[29]
+<< Join[26]
+>> Select[31]
+Select[31]
+<< Where[29]
+>> Select[33]
+Select[33]
+<< Select[31]
+>> Combiner[35]
+Combiner[35]
+<< Select[33]
+>> Combiner[37]
+Combiner[37]
+<< Combiner[35]
+>> Join[39]
+Join[39]
+<< __Input1[6] Combiner[37]
+>> Where[42]
+Where[42]
+<< Join[39]
+>> Select[44]
+Select[44]
+<< Where[42]
+>> Select[46]
+Select[46]
+<< Select[44]
+>> Combiner[48]
+Combiner[48]
+<< Select[46]
+>> Combiner[50]
+Combiner[50]
+<< Combiner[48]
+>> SelectMany[52]
+SelectMany[52]
+<< Combiner[50]
+>> Concat[123]
+Where[54]
+<< SelectMany[16]
+>> Join[56]
+Join[56]
+<< __Input0[5] Where[54]
+>> Select[59]
+Select[59]
+<< Join[56]
+>> Combiner[61]
+Combiner[61]
+<< Select[59]
+>> Combiner[63]
+Combiner[63]
+<< Combiner[61]
+>> Select[65]
+Select[65]
+<< Combiner[63]
+>> Join[67]
+Join[67]
+<< __Input2[7] Select[65]
+>> Where[70]
+Where[70]
+<< Join[67]
+>> Select[72]
+Select[72]
+<< Where[70]
+>> Concat[94]
+Where[74]
+<< SelectMany[16]
+>> Join[76]
+Join[76]
+<< __Input0[5] Where[74]
+>> Select[79]
+Select[79]
+<< Join[76]
+>> Combiner[81]
+Combiner[81]
+<< Select[79]
+>> Combiner[83]
+Combiner[83]
+<< Combiner[81]
+>> Select[85]
+Select[85]
+<< Combiner[83]
+>> Join[87] Concat[120]
+Join[87]
+<< __Input3[8] Select[85]
+>> Where[90]
+Where[90]
+<< Join[87]
+>> Select[92]
+Select[92]
+<< Where[90]
+>> Concat[94]
+Concat[94]
+<< Select[72] Select[92]
+>> Select[97]
+Select[97]
+<< Concat[94]
+>> Combiner[99]
+Combiner[99]
+<< Select[97]
+>> Combiner[101]
+Combiner[101]
+<< Combiner[99]
+>> Select[103]
+Select[103]
+<< Combiner[101]
+>> Join[105]
+Join[105]
+<< __Input1[6] Select[103]
+>> Where[108]
+Where[108]
+<< Join[105]
+>> Select[110]
+Select[110]
+<< Where[108]
+>> Combiner[112]
+Combiner[112]
+<< Select[110]
+>> Combiner[114]
+Combiner[114]
+<< Combiner[112]
+>> Select[116]
+Select[116]
+<< Combiner[114]
+>> SelectMany[118]
+SelectMany[118]
+<< Select[116]
+>> Concat[120]
+Concat[120]
+<< Select[85] SelectMany[118]
+>> Concat[123]
+Concat[123]
+<< SelectMany[52] Concat[120]
+>> Concat[126]
+Concat[126]
+<< SelectMany[16] Concat[123]
+>> Select[129]
+Select[129]
+<< Concat[126]
+>> Combiner[131]
+Combiner[131]
+<< Select[129]
+>> Combiner[133]
+Combiner[133]
+<< Combiner[131]
+>> Select[135]
+Select[135]
+<< Combiner[133]
+>> Subscribe[137]
+Subscribe[137]
+<< Select[135]
+>>
+67 stages
+Aggregator[0]
+<<
+>>
+Centralizer[1]
+<<
+>>
+Consumer[2]
+<<
+>>
+__Input0[5]
+<<
+>> CheckpointUpdateAggregator[6]
+CheckpointUpdateAggregator[6]
+<< __Input0[5]
+>>
+__Input1[8]
+<<
+>> PartitionBy[9]
+PartitionBy[9]
+<< __Input1[8]
+>> Subscribe[11]
+Subscribe[11]
+<< PartitionBy[9]
+>>
+__Input2[13]
+<<
+>> Select[14] Select[18] Concat[20]
+Select[14]
+<< __Input2[13]
+>> Consolidate[16]
+Consolidate[16]
+<< Select[14]
+>> Where[23] FixedPoint.Ingress[38]
+Select[18]
+<< __Input2[13]
+>> Concat[20]
+Concat[20]
+<< __Input2[13] Select[18]
+>> FixedPoint.Ingress[33]
+Where[23]
+<< Consolidate[16]
+>> FixedPoint.Ingress[26]
+Iterate.Advance[25]
+<< Consolidate[48]
+>> Concat[30]
+FixedPoint.Ingress[26]
+<< Where[23]
+>> PartitionBy[28]
+PartitionBy[28]
+<< FixedPoint.Ingress[26]
+>> Concat[30] Except[45]
+Concat[30]
+<< Iterate.Advance[25] PartitionBy[28]
+>> Join[35]
+FixedPoint.Ingress[33]
+<< Concat[20]
+>> Join[35]
+Join[35]
+<< Concat[30] FixedPoint.Ingress[33]
+>> Concat[40]
+FixedPoint.Ingress[38]
+<< Consolidate[16]
+>> Concat[40]
+Concat[40]
+<< Join[35] FixedPoint.Ingress[38]
+>> Min[43]
+Min[43]
+<< Concat[40]
+>> Except[45] FixedPoint.Egress[51]
+Except[45]
+<< PartitionBy[28] Min[43]
+>> Consolidate[48]
+Consolidate[48]
+<< Except[45]
+>> Iterate.Advance[25]
+FixedPoint.Egress[51]
+<< Min[43]
+>> Count[53]
+Count[53]
+<< FixedPoint.Egress[51]
+>> Consolidate[55]
+Consolidate[55]
+<< Count[53]
+>> Subscribe[57]
+Subscribe[57]
+<< Consolidate[55]
+>>
+29 stages
+Initialized 3434
+CompactInternTable
+CompactInternTable
+CompactInternTable
+327687 Caching output 0
+329131 Caching output remove 0
+Time to process: 00:05:29.8774751
+[ 2, +3730308 ]
+[ 3, +1247732 ]
+[ 4, +555739 ]
+[ 5, +291385 ]
+[ 6, +168355 ]
+[ 7, +104686 ]
+[ 8, +67650 ]
+[ 9, +46161 ]
+[ 10, +32520 ]
+[ 11, +23107 ]
+[ 12, +16862 ]
+[ 13, +12741 ]
+[ 14, +9629 ]
+[ 15, +7383 ]
+[ 16, +5674 ]
+[ 17, +4435 ]
+[ 18, +3549 ]
+[ 19, +2805 ]
+[ 20, +2263 ]
+[ 21, +1846 ]
+[ 22, +1463 ]
+[ 23, +1228 ]
+[ 24, +966 ]
+[ 25, +717 ]
+[ 26, +600 ]
+[ 27, +536 ]
+[ 28, +441 ]
+[ 29, +367 ]
+[ 30, +368 ]
+[ 31, +291 ]
+[ 32, +213 ]
+[ 33, +197 ]
+[ 34, +149 ]
+[ 35, +141 ]
+[ 36, +109 ]
+[ 37, +110 ]
+[ 38, +80 ]
+[ 39, +70 ]
+[ 40, +52 ]
+[ 41, +47 ]
+[ 42, +48 ]
+[ 43, +35 ]
+[ 44, +34 ]
+[ 45, +31 ]
+[ 46, +25 ]
+[ 47, +22 ]
+[ 48, +17 ]
+[ 49, +12 ]
+[ 50, +18 ]
+[ 51, +20 ]
+[ 52, +8 ]
+[ 53, +9 ]
+[ 54, +6 ]
+[ 55, +10 ]
+[ 56, +3 ]
+[ 57, +7 ]
+[ 58, +2 ]
+[ 59, +3 ]
+[ 60, +4 ]
+[ 61, +2 ]
+[ 62, +2 ]
+[ 63, +3 ]
+[ 64, +1 ]
+[ 65, +3 ]
+[ 66, +1 ]
+[ 67, +2 ]
+[ 68, +1 ]
+[ 69, +1 ]
+[ 70, +1 ]
+[ 72, +2 ]
+[ 73, +1 ]
+[ 80, +1 ]
+[ 81, +3 ]
+[ 58291618, +1 ]
+NextCheckpointIsIncremental: 425 0 2821540 0.000150626962580718
+MustStartFullCheckpoint False
+329745 Caching output 1
+NextCheckpointIsIncremental: 9271 0 43067737 0.000215265547850819
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 22633 0 56384757 0.000401402811756376
+MustStartFullCheckpoint False
+332052 Caching output remove 1
+Time to process: 00:05:32.7967786
+[ 2, -22 ]
+[ 3, -16 ]
+[ 4, -4 ]
+[ 5, -6 ]
+[ 6, +3 ]
+[ 7, +6 ]
+[ 8, +6 ]
+[ 9, +5 ]
+[ 10, -4 ]
+[ 11, +2 ]
+[ 12, +4 ]
+[ 13, -4 ]
+[ 14, -4 ]
+[ 15, +3 ]
+[ 16, -1 ]
+[ 17, -1 ]
+[ 18, +1 ]
+[ 19, -2 ]
+[ 20, +3 ]
+[ 22, +1 ]
+[ 23, +1 ]
+[ 26, +1 ]
+[ 27, +1 ]
+[ 29, -1 ]
+[ 31, -1 ]
+[ 36, +1 ]
+[ 41, -1 ]
+[ 44, -1 ]
+[ 48, +1 ]
+[ 51, -1 ]
+[ 58291618, -1 ]
+[ 58291619, +1 ]
+NextCheckpointIsIncremental: 451 425 2821540 0.000310468751107551
+MustStartFullCheckpoint False
+332617 Caching output 2
+NextCheckpointIsIncremental: 10738 9271 43067737 0.000464593716637584
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 26514 22633 56384757 0.000871636282834384
+MustStartFullCheckpoint False
+CompactInternTable
+348454 Caching output remove 2
+Time to process: 00:05:49.1986000
+[ 2, +1 ]
+[ 3, +23 ]
+[ 4, -1 ]
+[ 5, -10 ]
+[ 6, -6 ]
+[ 7, +11 ]
+[ 8, +2 ]
+[ 9, -6 ]
+[ 10, +2 ]
+[ 11, +2 ]
+[ 12, +1 ]
+[ 13, +1 ]
+[ 15, -3 ]
+[ 16, +1 ]
+[ 17, -2 ]
+[ 18, -2 ]
+[ 19, +2 ]
+[ 20, +1 ]
+[ 21, +2 ]
+[ 22, -2 ]
+[ 23, -1 ]
+[ 31, -1 ]
+[ 58291618, +1 ]
+[ 58291619, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 369 876 2821540 0.000441248396265869
+MustStartFullCheckpoint False
+362893 Caching output 3
+NextCheckpointIsIncremental: 11914 20009 43067737 0.000741227708342326
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 29656 49147 56384757 0.0013975940341465
+MustStartFullCheckpoint False
+365259 Caching output remove 3
+Time to process: 00:06:06.0037198
+[ 2, +22 ]
+[ 3, -6 ]
+[ 4, -7 ]
+[ 5, +6 ]
+[ 6, -4 ]
+[ 7, +1 ]
+[ 8, -2 ]
+[ 10, +1 ]
+[ 11, +5 ]
+[ 12, +5 ]
+[ 13, -2 ]
+[ 14, -1 ]
+[ 15, -2 ]
+[ 16, +2 ]
+[ 17, -2 ]
+[ 18, -1 ]
+[ 19, +1 ]
+[ 20, -1 ]
+[ 23, +1 ]
+[ 24, +3 ]
+[ 25, +2 ]
+[ 26, +1 ]
+[ 28, -1 ]
+[ 29, -1 ]
+[ 34, +2 ]
+[ 35, -2 ]
+[ 36, +1 ]
+[ 58291476, +1 ]
+[ 58291618, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 432 1245 2821540 0.000594356273524387
+MustStartFullCheckpoint False
+382205 Caching output 4
+NextCheckpointIsIncremental: 20362 31923 43067737 0.00121401781570274
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 52071 78803 56384757 0.00232108830406062
+MustStartFullCheckpoint False
+384634 Caching output remove 4
+Time to process: 00:06:25.3792019
+[ 2, -36 ]
+[ 3, +25 ]
+[ 4, -2 ]
+[ 5, -4 ]
+[ 6, +9 ]
+[ 7, +6 ]
+[ 8, -4 ]
+[ 9, +7 ]
+[ 10, -6 ]
+[ 11, -4 ]
+[ 12, +7 ]
+[ 13, -2 ]
+[ 14, -3 ]
+[ 15, -2 ]
+[ 16, +2 ]
+[ 17, -2 ]
+[ 18, +1 ]
+[ 20, -2 ]
+[ 21, +1 ]
+[ 22, +4 ]
+[ 23, -1 ]
+[ 24, -1 ]
+[ 26, -1 ]
+[ 29, -1 ]
+[ 31, +1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 36, +1 ]
+[ 37, -1 ]
+[ 38, -1 ]
+[ 39, +1 ]
+[ 54, +1 ]
+[ 58291423, +1 ]
+[ 58291476, -1 ]
+NextCheckpointIsIncremental: 376 1677 2821540 0.000727616833360505
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 17361 52285 43067737 0.00161712699230052
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 43478 130874 56384757 0.00309218322959164
+MustStartFullCheckpoint False
+CompactInternTable
+400860 Caching output 5
+401092 Caching output remove 5
+Time to process: 00:06:41.8365059
+[ 2, -4 ]
+[ 3, +22 ]
+[ 4, +14 ]
+[ 5, +5 ]
+[ 6, +5 ]
+[ 7, +6 ]
+[ 8, +6 ]
+[ 9, -1 ]
+[ 10, -1 ]
+[ 11, -2 ]
+[ 12, -7 ]
+[ 13, -3 ]
+[ 14, -2 ]
+[ 15, +1 ]
+[ 16, +5 ]
+[ 17, -4 ]
+[ 18, +4 ]
+[ 21, +1 ]
+[ 22, -1 ]
+[ 23, -2 ]
+[ 24, -1 ]
+[ 28, +1 ]
+[ 30, -1 ]
+[ 31, -2 ]
+[ 58291423, -1 ]
+[ 58291428, +1 ]
+NextCheckpointIsIncremental: 385 2053 2821540 0.000864067140639509
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 10713 69646 43067737 0.00186587468015791
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 26509 174352 56384757 0.00356232802422116
+MustStartFullCheckpoint False
+CompactInternTable
+415107 Caching output 6
+416493 Caching output remove 6
+Time to process: 00:06:57.2378251
+[ 2, +17 ]
+[ 3, +1 ]
+[ 5, +20 ]
+[ 6, -2 ]
+[ 7, -6 ]
+[ 8, -2 ]
+[ 9, -6 ]
+[ 11, +4 ]
+[ 12, -6 ]
+[ 13, +3 ]
+[ 14, -2 ]
+[ 15, +5 ]
+[ 16, -1 ]
+[ 17, -6 ]
+[ 18, +2 ]
+[ 19, +1 ]
+[ 20, +1 ]
+[ 21, -1 ]
+[ 22, -2 ]
+[ 26, -1 ]
+[ 31, +1 ]
+[ 39, -1 ]
+[ 58291428, -1 ]
+[ 58291530, +1 ]
+NextCheckpointIsIncremental: 405 2438 2821540 0.00100760577556937
+MustStartFullCheckpoint False
+417294 Caching output 7
+NextCheckpointIsIncremental: 17416 80359 43067737 0.00227026091480033
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 44141 200861 56384757 0.00434518144682259
+MustStartFullCheckpoint False
+CompactInternTable
+433199 Caching output remove 7
+Time to process: 00:07:13.9441033
+[ 2, +30 ]
+[ 3, -12 ]
+[ 4, -11 ]
+[ 5, -6 ]
+[ 6, -6 ]
+[ 7, -1 ]
+[ 8, -5 ]
+[ 9, +11 ]
+[ 10, +5 ]
+[ 11, -3 ]
+[ 12, -2 ]
+[ 13, -5 ]
+[ 14, -2 ]
+[ 15, +5 ]
+[ 16, +1 ]
+[ 17, -1 ]
+[ 18, +1 ]
+[ 19, +1 ]
+[ 20, +1 ]
+[ 21, -1 ]
+[ 22, -2 ]
+[ 23, -4 ]
+[ 27, +2 ]
+[ 29, -1 ]
+[ 37, -1 ]
+[ 39, -1 ]
+[ 41, +1 ]
+[ 45, +1 ]
+[ 57, -1 ]
+[ 81, -1 ]
+[ 58291530, -1 ]
+[ 58291787, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 362 2843 2821540 0.00113590450604989
+MustStartFullCheckpoint False
+449959 Caching output 8
+NextCheckpointIsIncremental: 10804 97775 43067737 0.00252112155324065
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 27037 245002 56384757 0.00482469047441315
+MustStartFullCheckpoint False
+452251 Caching output remove 8
+Time to process: 00:07:32.9958735
+[ 2, +17 ]
+[ 3, -21 ]
+[ 4, +32 ]
+[ 5, -17 ]
+[ 6, -5 ]
+[ 7, -1 ]
+[ 8, -7 ]
+[ 9, +8 ]
+[ 10, -3 ]
+[ 11, -2 ]
+[ 13, -1 ]
+[ 15, +2 ]
+[ 16, +2 ]
+[ 18, +1 ]
+[ 19, +1 ]
+[ 20, +2 ]
+[ 21, -1 ]
+[ 22, -1 ]
+[ 23, +2 ]
+[ 27, -2 ]
+[ 30, +1 ]
+[ 31, -1 ]
+[ 37, -1 ]
+[ 58291787, -1 ]
+[ 58291812, +1 ]
+NextCheckpointIsIncremental: 314 3205 2821540 0.00124719125016835
+MustStartFullCheckpoint False
+452943 Caching output 9
+NextCheckpointIsIncremental: 14941 108579 43067737 0.00286804017587458
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 37947 272039 56384757 0.00549769151261927
+MustStartFullCheckpoint False
+CompactInternTable
+468775 Caching output remove 9
+Time to process: 00:07:49.5202521
+[ 2, -20 ]
+[ 4, +5 ]
+[ 5, +8 ]
+[ 6, +8 ]
+[ 7, -6 ]
+[ 8, +12 ]
+[ 9, +4 ]
+[ 10, -2 ]
+[ 11, -5 ]
+[ 12, -4 ]
+[ 13, +2 ]
+[ 14, +3 ]
+[ 16, +2 ]
+[ 20, -1 ]
+[ 22, +2 ]
+[ 23, -4 ]
+[ 24, +1 ]
+[ 26, +1 ]
+[ 29, +1 ]
+[ 31, -1 ]
+[ 33, +1 ]
+[ 34, -1 ]
+[ 35, -1 ]
+[ 58291717, +1 ]
+[ 58291812, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 428 3519 2821540 0.00139888146189669
+MustStartFullCheckpoint False
+483251 Caching output 10
+NextCheckpointIsIncremental: 11349 123520 43067737 0.00313155529857536
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 28273 309986 56384757 0.00599912135827773
+MustStartFullCheckpoint False
+485617 Caching output remove 10
+Time to process: 00:08:06.3614675
+[ 2, -21 ]
+[ 3, -26 ]
+[ 4, +26 ]
+[ 5, -2 ]
+[ 6, +3 ]
+[ 7, +7 ]
+[ 8, +16 ]
+[ 9, +2 ]
+[ 10, -11 ]
+[ 11, +3 ]
+[ 12, -5 ]
+[ 13, -1 ]
+[ 14, -5 ]
+[ 15, +2 ]
+[ 16, +2 ]
+[ 17, +1 ]
+[ 18, +3 ]
+[ 19, -2 ]
+[ 24, -1 ]
+[ 25, +1 ]
+[ 26, +2 ]
+[ 27, -1 ]
+[ 28, -1 ]
+[ 30, +1 ]
+[ 42, +1 ]
+[ 44, -1 ]
+[ 65, -1 ]
+[ 58291663, +1 ]
+[ 58291717, -1 ]
+NextCheckpointIsIncremental: 455 3947 2821540 0.0015601409159537
+MustStartFullCheckpoint False
+486307 Caching output 11
+NextCheckpointIsIncremental: 17556 134869 43067737 0.0035391922264223
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 44727 338259 56384757 0.00679236766064275
+MustStartFullCheckpoint False
+CompactInternTable
+502424 Caching output remove 11
+Time to process: 00:08:23.1691837
+[ 2, +12 ]
+[ 3, +7 ]
+[ 4, +1 ]
+[ 5, -3 ]
+[ 6, -2 ]
+[ 7, +4 ]
+[ 8, +1 ]
+[ 9, -2 ]
+[ 10, +1 ]
+[ 11, -2 ]
+[ 12, -2 ]
+[ 14, -1 ]
+[ 15, -2 ]
+[ 18, +1 ]
+[ 19, -1 ]
+[ 20, +5 ]
+[ 21, +2 ]
+[ 22, +1 ]
+[ 23, -1 ]
+[ 24, +1 ]
+[ 25, +1 ]
+[ 27, -1 ]
+[ 29, -1 ]
+[ 31, +1 ]
+[ 33, -1 ]
+[ 37, +1 ]
+[ 39, +1 ]
+[ 58291516, +1 ]
+[ 58291663, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 383 4402 2821540 0.00169588239046762
+MustStartFullCheckpoint False
+517034 Caching output 12
+NextCheckpointIsIncremental: 19415 152425 43067737 0.00398999371617784
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 49448 382986 56384757 0.00766934226567652
+MustStartFullCheckpoint False
+519423 Caching output remove 12
+Time to process: 00:08:40.1678461
+[ 2, -11 ]
+[ 3, -6 ]
+[ 4, +7 ]
+[ 5, +2 ]
+[ 6, -6 ]
+[ 7, +9 ]
+[ 8, +11 ]
+[ 9, -9 ]
+[ 10, +9 ]
+[ 11, -5 ]
+[ 12, -4 ]
+[ 13, -2 ]
+[ 15, +1 ]
+[ 16, -2 ]
+[ 18, -1 ]
+[ 19, +1 ]
+[ 20, -3 ]
+[ 22, -1 ]
+[ 23, +1 ]
+[ 24, +1 ]
+[ 25, -1 ]
+[ 28, +1 ]
+[ 30, -1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 35, +1 ]
+[ 36, -1 ]
+[ 42, +1 ]
+[ 61, -1 ]
+[ 62, +1 ]
+[ 58291516, -1 ]
+[ 58291567, +1 ]
+NextCheckpointIsIncremental: 402 4785 2821540 0.00183835777624985
+MustStartFullCheckpoint False
+520054 Caching output 13
+NextCheckpointIsIncremental: 9433 171840 43067737 0.00420902078045104
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 23147 432434 56384757 0.00807986101633816
+MustStartFullCheckpoint False
+CompactInternTable
+535913 Caching output remove 13
+Time to process: 00:08:56.6581142
+[ 2, +2 ]
+[ 3, +9 ]
+[ 4, +12 ]
+[ 5, -8 ]
+[ 6, +5 ]
+[ 7, +4 ]
+[ 8, +3 ]
+[ 9, +1 ]
+[ 10, -11 ]
+[ 11, -4 ]
+[ 12, -3 ]
+[ 13, +6 ]
+[ 14, +3 ]
+[ 16, -3 ]
+[ 17, +3 ]
+[ 18, -1 ]
+[ 19, +5 ]
+[ 20, -1 ]
+[ 21, -1 ]
+[ 22, -1 ]
+[ 23, -1 ]
+[ 24, +1 ]
+[ 25, +1 ]
+[ 26, +1 ]
+[ 27, -1 ]
+[ 29, +1 ]
+[ 39, -1 ]
+[ 40, +1 ]
+[ 58291477, +1 ]
+[ 58291567, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 533 5187 2821540 0.0020272617081452
+MustStartFullCheckpoint False
+550309 Caching output 14
+NextCheckpointIsIncremental: 12269 181273 43067737 0.00449389760135296
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 30395 455581 56384757 0.0086189251467378
+MustStartFullCheckpoint False
+552643 Caching output remove 14
+Time to process: 00:09:13.3881007
+[ 2, +6 ]
+[ 3, -18 ]
+[ 4, +12 ]
+[ 5, +2 ]
+[ 6, -3 ]
+[ 7, +3 ]
+[ 8, -3 ]
+[ 9, +5 ]
+[ 10, -4 ]
+[ 11, -1 ]
+[ 12, -2 ]
+[ 13, +1 ]
+[ 14, +4 ]
+[ 16, +1 ]
+[ 17, -1 ]
+[ 19, +1 ]
+[ 21, -1 ]
+[ 23, +1 ]
+[ 26, +1 ]
+[ 27, -1 ]
+[ 29, -1 ]
+[ 30, -1 ]
+[ 31, +1 ]
+[ 34, -1 ]
+[ 35, +1 ]
+[ 36, -1 ]
+[ 58291477, -1 ]
+[ 58291481, +1 ]
+NextCheckpointIsIncremental: 502 5720 2821540 0.00220517873218172
+MustStartFullCheckpoint False
+553249 Caching output 15
+NextCheckpointIsIncremental: 10518 193542 43067737 0.00473811753796119
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 26007 485976 56384757 0.00908016682593844
+MustStartFullCheckpoint False
+CompactInternTable
+569069 Caching output remove 15
+Time to process: 00:09:29.8140600
+[ 2, +46 ]
+[ 3, +6 ]
+[ 4, +7 ]
+[ 5, -15 ]
+[ 7, +11 ]
+[ 8, +1 ]
+[ 9, +3 ]
+[ 10, +1 ]
+[ 11, +8 ]
+[ 12, -8 ]
+[ 13, +1 ]
+[ 14, -4 ]
+[ 15, +1 ]
+[ 16, +1 ]
+[ 17, +3 ]
+[ 18, +1 ]
+[ 19, -3 ]
+[ 21, -1 ]
+[ 23, -1 ]
+[ 24, -1 ]
+[ 26, +1 ]
+[ 28, -1 ]
+[ 29, +1 ]
+[ 30, -1 ]
+[ 58291419, +1 ]
+[ 58291481, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 466 6222 2821540 0.00237033676644669
+MustStartFullCheckpoint False
+583484 Caching output 16
+NextCheckpointIsIncremental: 15114 204060 43067737 0.00508905308862641
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 38379 511983 56384757 0.00976082950929451
+MustStartFullCheckpoint False
+585873 Caching output remove 16
+Time to process: 00:09:46.6180474
+[ 2, -3 ]
+[ 3, -22 ]
+[ 4, +3 ]
+[ 5, +6 ]
+[ 6, +10 ]
+[ 7, -1 ]
+[ 8, -8 ]
+[ 9, +2 ]
+[ 10, +3 ]
+[ 11, -5 ]
+[ 12, +2 ]
+[ 13, +6 ]
+[ 14, -4 ]
+[ 17, +1 ]
+[ 19, -2 ]
+[ 20, +1 ]
+[ 21, +1 ]
+[ 23, +1 ]
+[ 25, -1 ]
+[ 26, +2 ]
+[ 33, -1 ]
+[ 43, -1 ]
+[ 45, -1 ]
+[ 46, +1 ]
+[ 47, +1 ]
+[ 58291403, +1 ]
+[ 58291419, -1 ]
+NextCheckpointIsIncremental: 399 6688 2821540 0.0025117489030813
+MustStartFullCheckpoint False
+586538 Caching output 17
+NextCheckpointIsIncremental: 10604 219174 43067737 0.00533526987963171
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 26322 550362 56384757 0.0102276578047503
+MustStartFullCheckpoint False
+CompactInternTable
+602373 Caching output remove 17
+Time to process: 00:10:03.1174067
+[ 2, -14 ]
+[ 4, -23 ]
+[ 5, +4 ]
+[ 6, -1 ]
+[ 8, +4 ]
+[ 9, -2 ]
+[ 10, +6 ]
+[ 11, +1 ]
+[ 12, +5 ]
+[ 13, -4 ]
+[ 14, -3 ]
+[ 15, +3 ]
+[ 16, +2 ]
+[ 18, +2 ]
+[ 19, -1 ]
+[ 20, -1 ]
+[ 21, -1 ]
+[ 22, +3 ]
+[ 23, +3 ]
+[ 25, -1 ]
+[ 28, -1 ]
+[ 29, -1 ]
+[ 41, -1 ]
+[ 58291386, +1 ]
+[ 58291403, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 485 7087 2821540 0.00268364084861459
+MustStartFullCheckpoint False
+616897 Caching output 18
+NextCheckpointIsIncremental: 12176 229778 43067737 0.00561798731147634
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 30059 576684 56384757 0.0107607628778111
+MustStartFullCheckpoint False
+619267 Caching output remove 18
+Time to process: 00:10:20.0118122
+[ 2, -8 ]
+[ 3, +1 ]
+[ 4, -25 ]
+[ 5, +3 ]
+[ 6, -10 ]
+[ 7, +3 ]
+[ 8, +15 ]
+[ 9, +2 ]
+[ 11, +4 ]
+[ 12, -6 ]
+[ 13, +6 ]
+[ 14, -2 ]
+[ 16, +1 ]
+[ 17, +1 ]
+[ 18, +1 ]
+[ 19, +1 ]
+[ 20, +1 ]
+[ 23, -1 ]
+[ 24, +1 ]
+[ 26, +1 ]
+[ 30, -1 ]
+[ 32, +1 ]
+[ 33, -1 ]
+[ 38, +1 ]
+[ 40, -1 ]
+[ 58291283, +1 ]
+[ 58291386, -1 ]
+NextCheckpointIsIncremental: 510 7572 2821540 0.00286439320371145
+MustStartFullCheckpoint False
+619952 Caching output 19
+NextCheckpointIsIncremental: 14975 241954 43067737 0.00596569538817422
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 37716 606743 56384757 0.0114296670640968
+MustStartFullCheckpoint False
+CompactInternTable
+635844 Caching output remove 19
+Time to process: 00:10:36.5883833
+[ 2, +35 ]
+[ 3, -1 ]
+[ 4, +11 ]
+[ 5, +5 ]
+[ 6, -3 ]
+[ 7, -1 ]
+[ 8, -6 ]
+[ 9, +7 ]
+[ 10, -1 ]
+[ 11, -2 ]
+[ 12, +3 ]
+[ 13, -5 ]
+[ 14, +1 ]
+[ 15, +2 ]
+[ 16, +2 ]
+[ 17, -1 ]
+[ 18, +1 ]
+[ 19, -1 ]
+[ 21, +1 ]
+[ 24, -1 ]
+[ 25, +1 ]
+[ 26, -1 ]
+[ 27, -1 ]
+[ 28, +1 ]
+[ 38, +1 ]
+[ 45, -1 ]
+[ 52, +1 ]
+[ 53, -1 ]
+[ 58291205, +1 ]
+[ 58291283, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 491 8082 2821540 0.00303841164754
+MustStartFullCheckpoint False
+652525 Caching output 20
+NextCheckpointIsIncremental: 9671 256929 43067737 0.00619024863089509
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 23930 644459 56384757 0.0118540725465927
+MustStartFullCheckpoint False
+654898 Caching output remove 20
+Time to process: 00:10:55.6430002
+[ 2, +20 ]
+[ 4, +12 ]
+[ 5, -14 ]
+[ 6, -5 ]
+[ 7, +13 ]
+[ 8, -2 ]
+[ 9, +3 ]
+[ 10, +1 ]
+[ 12, -6 ]
+[ 13, +1 ]
+[ 14, -1 ]
+[ 16, -2 ]
+[ 17, -6 ]
+[ 18, -1 ]
+[ 19, +2 ]
+[ 20, -1 ]
+[ 22, -1 ]
+[ 23, +2 ]
+[ 25, -1 ]
+[ 28, +1 ]
+[ 29, +1 ]
+[ 31, +2 ]
+[ 40, +1 ]
+[ 58291139, +1 ]
+[ 58291205, -1 ]
+NextCheckpointIsIncremental: 449 8573 2821540 0.00319754460330174
+MustStartFullCheckpoint False
+655482 Caching output 21
+NextCheckpointIsIncremental: 10298 266600 43067737 0.00642936033532479
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 25607 668389 56384757 0.0123082201099137
+MustStartFullCheckpoint False
+CompactInternTable
+669878 Caching output remove 21
+Time to process: 00:11:10.6223142
+[ 2, +37 ]
+[ 3, -11 ]
+[ 4, +13 ]
+[ 5, +10 ]
+[ 6, -5 ]
+[ 7, +1 ]
+[ 8, -19 ]
+[ 9, -3 ]
+[ 10, -5 ]
+[ 12, +3 ]
+[ 13, -5 ]
+[ 14, +1 ]
+[ 15, +3 ]
+[ 16, +5 ]
+[ 17, -1 ]
+[ 18, +2 ]
+[ 19, -1 ]
+[ 20, +3 ]
+[ 22, -1 ]
+[ 25, +1 ]
+[ 26, -2 ]
+[ 28, -1 ]
+[ 29, +1 ]
+[ 30, +1 ]
+[ 31, -1 ]
+[ 34, +1 ]
+[ 36, -1 ]
+[ 38, -2 ]
+[ 42, -1 ]
+[ 44, +1 ]
+[ 58291139, -1 ]
+[ 58291185, +1 ]
+NextCheckpointIsIncremental: 403 9022 2821540 0.00334037440546652
+MustStartFullCheckpoint False
+670511 Caching output 22
+NextCheckpointIsIncremental: 11211 276898 43067737 0.0066896712032954
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 27718 693996 56384757 0.0127998068697893
+MustStartFullCheckpoint False
+CompactInternTable
+686375 Caching output remove 22
+Time to process: 00:11:27.1195554
+[ 2, +29 ]
+[ 3, -7 ]
+[ 4, +11 ]
+[ 5, +7 ]
+[ 6, -6 ]
+[ 7, -14 ]
+[ 8, +10 ]
+[ 9, -3 ]
+[ 10, -10 ]
+[ 11, +3 ]
+[ 12, -2 ]
+[ 13, -1 ]
+[ 14, -1 ]
+[ 15, -2 ]
+[ 16, +1 ]
+[ 17, -1 ]
+[ 18, +2 ]
+[ 19, +3 ]
+[ 20, +4 ]
+[ 21, -1 ]
+[ 22, -1 ]
+[ 24, -1 ]
+[ 25, +2 ]
+[ 26, -2 ]
+[ 28, -2 ]
+[ 30, -1 ]
+[ 31, -1 ]
+[ 32, +2 ]
+[ 35, +1 ]
+[ 37, -1 ]
+[ 58291185, -1 ]
+[ 58291263, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 426 9425 2821540 0.00349135578442978
+MustStartFullCheckpoint False
+703336 Caching output 23
+NextCheckpointIsIncremental: 10782 288109 43067737 0.00694002101851788
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 26757 721714 56384757 0.0132743500162641
+MustStartFullCheckpoint False
+705679 Caching output remove 23
+Time to process: 00:11:46.4236490
+[ 2, +7 ]
+[ 3, -2 ]
+[ 4, -2 ]
+[ 5, +14 ]
+[ 6, +12 ]
+[ 7, +5 ]
+[ 8, -6 ]
+[ 9, -2 ]
+[ 10, -3 ]
+[ 11, +2 ]
+[ 12, +6 ]
+[ 13, -5 ]
+[ 14, -2 ]
+[ 15, -2 ]
+[ 16, +1 ]
+[ 17, +1 ]
+[ 18, +4 ]
+[ 19, -1 ]
+[ 21, -1 ]
+[ 22, +2 ]
+[ 23, -2 ]
+[ 25, +2 ]
+[ 29, +1 ]
+[ 31, -2 ]
+[ 33, +1 ]
+[ 34, -1 ]
+[ 35, +1 ]
+[ 58291096, +1 ]
+[ 58291263, -1 ]
+NextCheckpointIsIncremental: 407 9851 2821540 0.00363560325212473
+MustStartFullCheckpoint False
+706316 Caching output 24
+NextCheckpointIsIncremental: 8623 298891 43067737 0.0071402405006792
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 20931 748471 56384757 0.0136455673649529
+MustStartFullCheckpoint False
+CompactInternTable
+722179 Caching output remove 24
+Time to process: 00:12:02.9237123
+[ 2, +5 ]
+[ 3, -12 ]
+[ 4, -4 ]
+[ 5, -3 ]
+[ 6, +2 ]
+[ 7, -7 ]
+[ 8, +1 ]
+[ 9, -4 ]
+[ 10, +3 ]
+[ 11, -1 ]
+[ 12, +1 ]
+[ 13, +2 ]
+[ 15, -2 ]
+[ 16, +1 ]
+[ 18, +1 ]
+[ 20, +2 ]
+[ 21, -1 ]
+[ 22, +3 ]
+[ 23, +1 ]
+[ 24, -2 ]
+[ 29, +1 ]
+[ 30, +1 ]
+[ 31, -2 ]
+[ 32, +1 ]
+[ 36, -2 ]
+[ 38, +1 ]
+[ 40, -1 ]
+[ 41, -1 ]
+[ 42, -1 ]
+[ 46, +1 ]
+[ 58291096, -1 ]
+[ 58291181, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 452 10258 2821540 0.0037957994570341
+MustStartFullCheckpoint False
+738958 Caching output 25
+NextCheckpointIsIncremental: 11553 307514 43067737 0.00740849234776371
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 28731 769402 56384757 0.0141551199732935
+MustStartFullCheckpoint False
+741324 Caching output remove 25
+Time to process: 00:12:22.0688804
+[ 2, +7 ]
+[ 3, +6 ]
+[ 4, +8 ]
+[ 6, -3 ]
+[ 7, -2 ]
+[ 8, -1 ]
+[ 9, +8 ]
+[ 10, -1 ]
+[ 11, +5 ]
+[ 12, -7 ]
+[ 13, -1 ]
+[ 14, -2 ]
+[ 16, +1 ]
+[ 17, -3 ]
+[ 18, +1 ]
+[ 19, -1 ]
+[ 21, +1 ]
+[ 22, -1 ]
+[ 23, -2 ]
+[ 24, -1 ]
+[ 25, +1 ]
+[ 26, +1 ]
+[ 27, +1 ]
+[ 28, -1 ]
+[ 29, +3 ]
+[ 31, -1 ]
+[ 33, -3 ]
+[ 36, +2 ]
+[ 38, +1 ]
+[ 39, -1 ]
+[ 45, -1 ]
+[ 46, +1 ]
+[ 48, -1 ]
+[ 51, +1 ]
+[ 58291181, -1 ]
+[ 58291197, +1 ]
+NextCheckpointIsIncremental: 472 10710 2821540 0.00396308398959434
+MustStartFullCheckpoint False
+741934 Caching output 26
+NextCheckpointIsIncremental: 11710 319067 43067737 0.00768038961508472
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 29228 798133 56384757 0.0146734870206145
+MustStartFullCheckpoint False
+CompactInternTable
+757726 Caching output remove 26
+Time to process: 00:12:38.4711985
+[ 2, +10 ]
+[ 3, +19 ]
+[ 4, -17 ]
+[ 5, -13 ]
+[ 6, +9 ]
+[ 7, +8 ]
+[ 9, -5 ]
+[ 10, +2 ]
+[ 11, +3 ]
+[ 12, +1 ]
+[ 13, +4 ]
+[ 14, -2 ]
+[ 15, +1 ]
+[ 16, -1 ]
+[ 18, +2 ]
+[ 20, +1 ]
+[ 21, +1 ]
+[ 22, -1 ]
+[ 24, +3 ]
+[ 27, +1 ]
+[ 29, -1 ]
+[ 33, +1 ]
+[ 34, +1 ]
+[ 36, -1 ]
+[ 58290964, +1 ]
+[ 58291197, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 443 11182 2821540 0.00412009044706082
+MustStartFullCheckpoint False
+774615 Caching output 27
+NextCheckpointIsIncremental: 11834 330777 43067737 0.00795516606781545
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 29305 827361 56384757 0.0151932196852422
+MustStartFullCheckpoint False
+776996 Caching output remove 27
+Time to process: 00:12:57.7411378
+[ 2, +7 ]
+[ 3, +6 ]
+[ 4, -11 ]
+[ 5, +10 ]
+[ 6, -9 ]
+[ 7, +8 ]
+[ 8, -4 ]
+[ 9, -4 ]
+[ 10, +1 ]
+[ 11, +2 ]
+[ 12, -3 ]
+[ 13, +3 ]
+[ 14, -5 ]
+[ 15, -2 ]
+[ 16, -1 ]
+[ 18, +1 ]
+[ 19, +1 ]
+[ 21, -1 ]
+[ 23, -1 ]
+[ 24, +1 ]
+[ 25, +1 ]
+[ 26, -1 ]
+[ 27, -1 ]
+[ 28, +1 ]
+[ 29, -1 ]
+[ 30, +1 ]
+[ 31, +1 ]
+[ 32, -1 ]
+[ 58290964, -1 ]
+[ 58291055, +1 ]
+NextCheckpointIsIncremental: 386 11625 2821540 0.00425689517072237
+MustStartFullCheckpoint False
+777609 Caching output 28
+NextCheckpointIsIncremental: 13743 342611 43067737 0.00827426804431354
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 34611 856666 56384757 0.0158070557970127
+MustStartFullCheckpoint False
+CompactInternTable
+792214 Caching output remove 28
+Time to process: 00:13:12.9587679
+[ 3, -11 ]
+[ 4, +9 ]
+[ 5, +11 ]
+[ 6, -6 ]
+[ 7, +7 ]
+[ 8, -9 ]
+[ 9, +1 ]
+[ 10, -8 ]
+[ 11, +1 ]
+[ 12, -5 ]
+[ 13, +6 ]
+[ 14, +1 ]
+[ 15, -1 ]
+[ 16, +2 ]
+[ 17, -1 ]
+[ 18, -2 ]
+[ 19, +4 ]
+[ 20, -5 ]
+[ 21, -2 ]
+[ 22, +2 ]
+[ 23, +2 ]
+[ 24, +1 ]
+[ 25, -1 ]
+[ 31, -1 ]
+[ 32, -2 ]
+[ 34, +1 ]
+[ 58291055, -1 ]
+[ 58291131, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 416 12011 2821540 0.0044043323858602
+MustStartFullCheckpoint False
+808335 Caching output 29
+NextCheckpointIsIncremental: 20620 356354 43067737 0.00875304871486514
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 52587 891277 56384757 0.0167397014764114
+MustStartFullCheckpoint False
+810779 Caching output remove 29
+Time to process: 00:13:31.5237014
+[ 2, +10 ]
+[ 3, -26 ]
+[ 4, -9 ]
+[ 6, +9 ]
+[ 7, +2 ]
+[ 9, +4 ]
+[ 10, +4 ]
+[ 11, +3 ]
+[ 12, -4 ]
+[ 13, +1 ]
+[ 14, +3 ]
+[ 16, +1 ]
+[ 17, +1 ]
+[ 19, -3 ]
+[ 20, -2 ]
+[ 21, +3 ]
+[ 22, -2 ]
+[ 23, -1 ]
+[ 25, +1 ]
+[ 26, +1 ]
+[ 27, -2 ]
+[ 28, +1 ]
+[ 31, +1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 41, -1 ]
+[ 58291089, +1 ]
+[ 58291131, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 471 12427 2821540 0.00457126250203789
+MustStartFullCheckpoint False
+828013 Caching output 30
+NextCheckpointIsIncremental: 37465 376974 43067737 0.00962295743563215
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 97310 943864 56384757 0.0184655225170164
+MustStartFullCheckpoint False
+830449 Caching output remove 30
+Time to process: 00:13:51.1935059
+[ 2, -33 ]
+[ 3, +14 ]
+[ 4, -8 ]
+[ 5, +10 ]
+[ 6, +22 ]
+[ 7, -14 ]
+[ 8, +5 ]
+[ 9, -14 ]
+[ 10, -7 ]
+[ 11, +2 ]
+[ 12, -6 ]
+[ 13, +1 ]
+[ 14, -3 ]
+[ 15, +4 ]
+[ 16, +1 ]
+[ 17, -2 ]
+[ 18, +2 ]
+[ 19, -1 ]
+[ 20, +5 ]
+[ 21, -3 ]
+[ 22, -1 ]
+[ 23, -2 ]
+[ 25, +1 ]
+[ 26, +1 ]
+[ 27, +2 ]
+[ 30, -1 ]
+[ 36, -1 ]
+[ 58291089, -1 ]
+[ 58291220, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 424 12898 2821540 0.00472153504823607
+MustStartFullCheckpoint False
+847751 Caching output 31
+NextCheckpointIsIncremental: 38896 414439 43067737 0.0105260928847968
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 100954 1041174 56384757 0.0202559709532844
+MustStartFullCheckpoint False
+850254 Caching output remove 31
+Time to process: 00:14:10.9988858
+[ 2, +21 ]
+[ 3, +2 ]
+[ 4, -20 ]
+[ 5, +3 ]
+[ 6, +5 ]
+[ 7, -6 ]
+[ 8, -2 ]
+[ 9, +1 ]
+[ 11, -5 ]
+[ 12, +6 ]
+[ 13, -2 ]
+[ 14, +4 ]
+[ 15, +5 ]
+[ 16, +1 ]
+[ 17, -5 ]
+[ 18, +3 ]
+[ 19, -1 ]
+[ 26, +2 ]
+[ 27, -2 ]
+[ 31, -1 ]
+[ 36, +1 ]
+[ 58291161, +1 ]
+[ 58291220, -1 ]
+NextCheckpointIsIncremental: 427 13322 2821540 0.00487287084358187
+MustStartFullCheckpoint False
+850907 Caching output 32
+NextCheckpointIsIncremental: 12663 453335 43067737 0.0108201180851457
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 31567 1142128 56384757 0.0208158208432112
+MustStartFullCheckpoint False
+CompactInternTable
+866808 Caching output remove 32
+Time to process: 00:14:27.5524917
+[ 2, +32 ]
+[ 3, +6 ]
+[ 4, +22 ]
+[ 5, -11 ]
+[ 6, +11 ]
+[ 7, -18 ]
+[ 9, -7 ]
+[ 10, +1 ]
+[ 11, -4 ]
+[ 13, +1 ]
+[ 14, -2 ]
+[ 15, -5 ]
+[ 16, -2 ]
+[ 17, +2 ]
+[ 18, -1 ]
+[ 21, -1 ]
+[ 22, +1 ]
+[ 23, +2 ]
+[ 24, -1 ]
+[ 25, -1 ]
+[ 27, +1 ]
+[ 31, +1 ]
+[ 36, -1 ]
+[ 38, +1 ]
+[ 40, +1 ]
+[ 58291161, -1 ]
+[ 58291236, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 380 13749 2821540 0.00500754906894816
+MustStartFullCheckpoint False
+883704 Caching output 33
+NextCheckpointIsIncremental: 14055 465998 43067737 0.0111464644636425
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 35050 1173695 56384757 0.0214374427471595
+MustStartFullCheckpoint False
+886053 Caching output remove 33
+Time to process: 00:14:46.7982235
+[ 2, +9 ]
+[ 3, +20 ]
+[ 4, -7 ]
+[ 5, +10 ]
+[ 6, +1 ]
+[ 7, -8 ]
+[ 8, -5 ]
+[ 9, -2 ]
+[ 12, -3 ]
+[ 13, +1 ]
+[ 14, -2 ]
+[ 15, -5 ]
+[ 16, +4 ]
+[ 17, -4 ]
+[ 18, +1 ]
+[ 19, +1 ]
+[ 20, +1 ]
+[ 21, +3 ]
+[ 22, +1 ]
+[ 23, -1 ]
+[ 24, -2 ]
+[ 25, -1 ]
+[ 28, +1 ]
+[ 31, +1 ]
+[ 32, -1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 35, +1 ]
+[ 39, -1 ]
+[ 40, +1 ]
+[ 58291236, -1 ]
+[ 58291283, +1 ]
+NextCheckpointIsIncremental: 374 14129 2821540 0.00514010079601919
+MustStartFullCheckpoint False
+886737 Caching output 34
+NextCheckpointIsIncremental: 16379 480053 43067737 0.0115267723493343
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 41294 1208745 56384757 0.022169803799988
+MustStartFullCheckpoint False
+CompactInternTable
+902768 Caching output remove 34
+Time to process: 00:15:03.5124925
+[ 2, +26 ]
+[ 3, +4 ]
+[ 4, +3 ]
+[ 5, +6 ]
+[ 6, -5 ]
+[ 7, -1 ]
+[ 8, -2 ]
+[ 9, +7 ]
+[ 10, +4 ]
+[ 11, -10 ]
+[ 12, -8 ]
+[ 13, +2 ]
+[ 15, -4 ]
+[ 16, -2 ]
+[ 18, -1 ]
+[ 19, -2 ]
+[ 20, +4 ]
+[ 21, +1 ]
+[ 23, +1 ]
+[ 24, -3 ]
+[ 25, -1 ]
+[ 27, +2 ]
+[ 28, -1 ]
+[ 31, +1 ]
+[ 58291283, -1 ]
+[ 58291356, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 359 14503 2821540 0.00526733627735208
+MustStartFullCheckpoint False
+919498 Caching output 35
+NextCheckpointIsIncremental: 10697 496432 43067737 0.0117751485293968
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 26521 1250039 56384757 0.0226401614180939
+MustStartFullCheckpoint False
+921807 Caching output remove 35
+Time to process: 00:15:22.5516078
+[ 2, -7 ]
+[ 3, -6 ]
+[ 4, +15 ]
+[ 5, -2 ]
+[ 6, +1 ]
+[ 7, +3 ]
+[ 8, +2 ]
+[ 9, -3 ]
+[ 10, +2 ]
+[ 11, -5 ]
+[ 12, +5 ]
+[ 13, -7 ]
+[ 14, -5 ]
+[ 16, +3 ]
+[ 17, -2 ]
+[ 18, -4 ]
+[ 19, -1 ]
+[ 20, -1 ]
+[ 21, +4 ]
+[ 25, -1 ]
+[ 28, +1 ]
+[ 38, +1 ]
+[ 39, -1 ]
+[ 44, +1 ]
+[ 58291356, -1 ]
+[ 58291461, +1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 373 14862 2821540 0.00539953358804057
+MustStartFullCheckpoint False
+936705 Caching output 36
+NextCheckpointIsIncremental: 10424 507129 43067737 0.0120171858577106
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 25956 1276560 56384757 0.0231004985975199
+MustStartFullCheckpoint False
+939019 Caching output remove 36
+Time to process: 00:15:39.7637152
+[ 2, -7 ]
+[ 3, +10 ]
+[ 4, -23 ]
+[ 5, +5 ]
+[ 6, +10 ]
+[ 7, -8 ]
+[ 8, -2 ]
+[ 9, -5 ]
+[ 10, +10 ]
+[ 11, +3 ]
+[ 12, -1 ]
+[ 13, +4 ]
+[ 14, -2 ]
+[ 15, -1 ]
+[ 16, -3 ]
+[ 17, +2 ]
+[ 18, +1 ]
+[ 19, -2 ]
+[ 20, -1 ]
+[ 21, -4 ]
+[ 23, +1 ]
+[ 25, +1 ]
+[ 26, +1 ]
+[ 27, -1 ]
+[ 29, -1 ]
+[ 32, +1 ]
+[ 58291461, -1 ]
+[ 58291554, +1 ]
+NextCheckpointIsIncremental: 410 15235 2821540 0.00554484430488315
+MustStartFullCheckpoint False
+939635 Caching output 37
+NextCheckpointIsIncremental: 12301 517553 43067737 0.0123028056942021
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 30491 1302516 56384757 0.0236412653157306
+MustStartFullCheckpoint False
+CompactInternTable
+955504 Caching output remove 37
+Time to process: 00:15:56.2491347
+[ 2, +25 ]
+[ 3, -3 ]
+[ 4, +6 ]
+[ 5, -18 ]
+[ 6, +5 ]
+[ 7, -3 ]
+[ 8, -5 ]
+[ 10, +8 ]
+[ 11, -7 ]
+[ 13, -4 ]
+[ 14, +2 ]
+[ 15, +1 ]
+[ 16, -2 ]
+[ 19, -2 ]
+[ 20, -1 ]
+[ 21, -4 ]
+[ 22, -1 ]
+[ 23, +1 ]
+[ 28, -2 ]
+[ 33, +1 ]
+[ 34, -1 ]
+[ 38, -1 ]
+[ 58291554, -1 ]
+[ 58291874, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 444 15645 2821540 0.00570220517873218
+MustStartFullCheckpoint False
+973476 Caching output 38
+NextCheckpointIsIncremental: 64534 529854 43067737 0.0138012359460633
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 169162 1333007 56384757 0.0266414023917847
+MustStartFullCheckpoint False
+976213 Caching output remove 38
+Time to process: 00:16:16.9577532
+[ 2, -12 ]
+[ 3, +13 ]
+[ 4, +9 ]
+[ 6, +2 ]
+[ 7, +3 ]
+[ 9, -2 ]
+[ 10, +5 ]
+[ 12, -1 ]
+[ 13, -5 ]
+[ 14, +5 ]
+[ 15, -4 ]
+[ 16, -2 ]
+[ 17, +2 ]
+[ 19, -2 ]
+[ 20, +1 ]
+[ 22, -2 ]
+[ 23, +1 ]
+[ 24, -1 ]
+[ 26, +1 ]
+[ 27, +2 ]
+[ 28, -1 ]
+[ 30, -1 ]
+[ 31, -2 ]
+[ 32, +1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 37, -1 ]
+[ 44, +1 ]
+[ 58291869, +1 ]
+[ 58291874, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 431 16089 2821540 0.00585495863960816
+MustStartFullCheckpoint False
+992748 Caching output 39
+NextCheckpointIsIncremental: 10161 594388 43067737 0.014037166615
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 25243 1502169 56384757 0.0270890943096554
+MustStartFullCheckpoint False
+995109 Caching output remove 39
+Time to process: 00:16:35.8541830
+[ 2, +50 ]
+[ 3, -29 ]
+[ 4, +9 ]
+[ 5, -9 ]
+[ 6, -7 ]
+[ 7, +4 ]
+[ 8, -3 ]
+[ 9, +2 ]
+[ 10, +1 ]
+[ 11, +9 ]
+[ 12, -1 ]
+[ 13, +2 ]
+[ 14, +4 ]
+[ 15, +4 ]
+[ 16, +2 ]
+[ 17, -3 ]
+[ 18, -3 ]
+[ 19, +1 ]
+[ 20, -1 ]
+[ 21, -1 ]
+[ 22, -1 ]
+[ 23, -1 ]
+[ 24, -1 ]
+[ 25, -1 ]
+[ 27, -1 ]
+[ 28, +2 ]
+[ 31, -1 ]
+[ 34, -1 ]
+[ 42, -1 ]
+[ 58291869, -1 ]
+[ 58291924, +1 ]
+NextCheckpointIsIncremental: 426 16520 2821540 0.00600594001857142
+MustStartFullCheckpoint False
+995738 Caching output 40
+NextCheckpointIsIncremental: 14176 604549 43067737 0.0143663225211949
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 35741 1527412 56384757 0.0277229712987856
+MustStartFullCheckpoint False
+CompactInternTable
+1011406 Caching output remove 40
+Time to process: 00:16:52.1505378
+[ 2, +4 ]
+[ 3, -14 ]
+[ 4, +30 ]
+[ 5, +10 ]
+[ 7, -4 ]
+[ 8, -2 ]
+[ 9, -13 ]
+[ 10, -3 ]
+[ 11, +2 ]
+[ 13, -3 ]
+[ 16, +4 ]
+[ 17, +4 ]
+[ 18, -1 ]
+[ 19, +3 ]
+[ 21, +1 ]
+[ 22, -1 ]
+[ 24, -1 ]
+[ 27, -1 ]
+[ 28, -1 ]
+[ 29, +1 ]
+[ 30, -2 ]
+[ 32, +1 ]
+[ 39, -1 ]
+[ 42, +1 ]
+[ 43, -1 ]
+[ 58291924, -1 ]
+[ 58291929, +1 ]
+NextCheckpointIsIncremental: 416 16946 2821540 0.00615337723370925
+MustStartFullCheckpoint False
+1012139 Caching output 41
+NextCheckpointIsIncremental: 19857 618725 43067737 0.0148273869137819
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 50805 1563153 56384757 0.0286240126919408
+MustStartFullCheckpoint False
+CompactInternTable
+1028029 Caching output remove 41
+Time to process: 00:17:08.7739731
+[ 2, +21 ]
+[ 3, -12 ]
+[ 4, -6 ]
+[ 6, -7 ]
+[ 7, +7 ]
+[ 8, +6 ]
+[ 9, -7 ]
+[ 10, +2 ]
+[ 11, -6 ]
+[ 12, +2 ]
+[ 13, +4 ]
+[ 14, -3 ]
+[ 15, +4 ]
+[ 17, -4 ]
+[ 18, -1 ]
+[ 19, -2 ]
+[ 20, +3 ]
+[ 21, +2 ]
+[ 22, -1 ]
+[ 24, -1 ]
+[ 25, +1 ]
+[ 26, -1 ]
+[ 29, +1 ]
+[ 30, -2 ]
+[ 31, +1 ]
+[ 34, -1 ]
+[ 35, +1 ]
+[ 46, -1 ]
+[ 58291929, -1 ]
+[ 58292025, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 395 17362 2821540 0.00629337170481368
+MustStartFullCheckpoint False
+1045062 Caching output 42
+NextCheckpointIsIncremental: 21631 638582 43067737 0.0153296422331176
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 55742 1613958 56384757 0.0296126132103398
+MustStartFullCheckpoint False
+1047504 Caching output remove 42
+Time to process: 00:17:28.2489871
+[ 2, +4 ]
+[ 3, -17 ]
+[ 4, +1 ]
+[ 5, +7 ]
+[ 6, +3 ]
+[ 7, -9 ]
+[ 8, +3 ]
+[ 9, +2 ]
+[ 10, +2 ]
+[ 11, -4 ]
+[ 12, -7 ]
+[ 13, +1 ]
+[ 14, -6 ]
+[ 15, -1 ]
+[ 16, -1 ]
+[ 17, -4 ]
+[ 19, +5 ]
+[ 20, -1 ]
+[ 23, +1 ]
+[ 24, +1 ]
+[ 25, +1 ]
+[ 26, -1 ]
+[ 43, -1 ]
+[ 58292025, -1 ]
+[ 58292210, +1 ]
+NextCheckpointIsIncremental: 404 17757 2821540 0.006436555923361
+MustStartFullCheckpoint False
+1048146 Caching output 43
+NextCheckpointIsIncremental: 12155 660213 43067737 0.0156118720609815
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 30372 1669700 56384757 0.0301512694290764
+MustStartFullCheckpoint False
+CompactInternTable
+1064123 Caching output remove 43
+Time to process: 00:17:44.8678857
+[ 2, -26 ]
+[ 3, +16 ]
+[ 4, +5 ]
+[ 5, -6 ]
+[ 6, +8 ]
+[ 7, -7 ]
+[ 8, +3 ]
+[ 9, +4 ]
+[ 10, +2 ]
+[ 11, -4 ]
+[ 12, +7 ]
+[ 13, -1 ]
+[ 14, -5 ]
+[ 15, -2 ]
+[ 17, +2 ]
+[ 18, -2 ]
+[ 19, -1 ]
+[ 20, +1 ]
+[ 21, +2 ]
+[ 23, -1 ]
+[ 25, -1 ]
+[ 28, +1 ]
+[ 29, -2 ]
+[ 31, +1 ]
+[ 32, -2 ]
+[ 34, +2 ]
+[ 36, -1 ]
+[ 37, -1 ]
+[ 40, -1 ]
+[ 58292210, -1 ]
+[ 58292318, +1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 392 18161 2821540 0.00657548714531781
+MustStartFullCheckpoint False
+1078643 Caching output 44
+NextCheckpointIsIncremental: 11597 672368 43067737 0.0158811455545017
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 28693 1700072 56384757 0.0306601480964084
+MustStartFullCheckpoint False
+1080967 Caching output remove 44
+Time to process: 00:18:01.7116823
+[ 2, +41 ]
+[ 3, -16 ]
+[ 4, -7 ]
+[ 5, +2 ]
+[ 6, +2 ]
+[ 7, -6 ]
+[ 9, +3 ]
+[ 10, -4 ]
+[ 11, +10 ]
+[ 12, -5 ]
+[ 13, +3 ]
+[ 14, -6 ]
+[ 15, +6 ]
+[ 16, +1 ]
+[ 17, +1 ]
+[ 18, +1 ]
+[ 21, -1 ]
+[ 22, +1 ]
+[ 23, +2 ]
+[ 24, -1 ]
+[ 26, -1 ]
+[ 31, +1 ]
+[ 47, +1 ]
+[ 48, -1 ]
+[ 58292187, +1 ]
+[ 58292318, -1 ]
+NextCheckpointIsIncremental: 429 18553 2821540 0.0067275317734287
+MustStartFullCheckpoint False
+1081562 Caching output 45
+NextCheckpointIsIncremental: 12971 683965 43067737 0.0161823222799006
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 32549 1728765 56384757 0.0312374140408196
+MustStartFullCheckpoint False
+CompactInternTable
+1097438 Caching output remove 45
+Time to process: 00:18:18.1823792
+[ 2, +9 ]
+[ 3, +23 ]
+[ 4, +26 ]
+[ 5, -23 ]
+[ 6, -11 ]
+[ 7, +7 ]
+[ 8, +3 ]
+[ 9, +1 ]
+[ 10, -6 ]
+[ 11, -3 ]
+[ 12, +1 ]
+[ 13, +4 ]
+[ 14, +2 ]
+[ 15, +2 ]
+[ 16, -6 ]
+[ 17, -1 ]
+[ 18, -3 ]
+[ 19, +1 ]
+[ 20, +1 ]
+[ 21, -1 ]
+[ 22, +1 ]
+[ 24, +2 ]
+[ 26, -1 ]
+[ 33, +1 ]
+[ 58292144, +1 ]
+[ 58292187, -1 ]
+CompactInternTable
+NextCheckpointIsIncremental: 344 18982 2821540 0.00684945100902344
+MustStartFullCheckpoint False
+1111889 Caching output 46
+NextCheckpointIsIncremental: 12359 696936 43067737 0.0164692888321483
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 31003 1761314 56384757 0.0317872612273562
+MustStartFullCheckpoint False
+1114230 Caching output remove 46
+Time to process: 00:18:34.9748404
+[ 2, -6 ]
+[ 3, -7 ]
+[ 4, +13 ]
+[ 6, -13 ]
+[ 7, -10 ]
+[ 8, +7 ]
+[ 9, +7 ]
+[ 11, -4 ]
+[ 12, -3 ]
+[ 13, -3 ]
+[ 15, +1 ]
+[ 16, -2 ]
+[ 17, +2 ]
+[ 18, -5 ]
+[ 19, +1 ]
+[ 20, -1 ]
+[ 21, +1 ]
+[ 22, +1 ]
+[ 23, +1 ]
+[ 24, +1 ]
+[ 25, -1 ]
+[ 26, +1 ]
+[ 29, +1 ]
+[ 31, -1 ]
+[ 32, -1 ]
+[ 33, +1 ]
+[ 58292144, -1 ]
+[ 58292248, +1 ]
+NextCheckpointIsIncremental: 481 19326 2821540 0.00701992528902656
+MustStartFullCheckpoint False
+1114838 Caching output 47
+NextCheckpointIsIncremental: 11182 709295 43067737 0.0167289263422408
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 27831 1792317 56384757 0.0322808520749677
+MustStartFullCheckpoint False
+CompactInternTable
+1130714 Caching output remove 47
+Time to process: 00:18:51.4592670
+[ 3, -14 ]
+[ 4, +6 ]
+[ 5, +6 ]
+[ 6, +4 ]
+[ 7, -13 ]
+[ 8, -14 ]
+[ 9, +5 ]
+[ 13, +3 ]
+[ 14, -1 ]
+[ 15, +4 ]
+[ 16, -4 ]
+[ 17, -2 ]
+[ 18, -2 ]
+[ 19, +1 ]
+[ 20, -1 ]
+[ 21, +1 ]
+[ 22, -2 ]
+[ 24, +1 ]
+[ 27, +1 ]
+[ 28, +1 ]
+[ 31, -1 ]
+[ 40, -1 ]
+[ 58292248, -1 ]
+[ 58292394, +1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 404 19807 2821540 0.00716310950757388
+MustStartFullCheckpoint False
+1147704 Caching output 48
+NextCheckpointIsIncremental: 23217 720477 43067737 0.0172680073717363
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 59555 1820148 56384757 0.0333370772529888
+MustStartFullCheckpoint False
+1150139 Caching output remove 48
+Time to process: 00:19:10.8842783
+[ 2, -8 ]
+[ 3, +27 ]
+[ 4, -12 ]
+[ 6, -13 ]
+[ 7, -7 ]
+[ 8, +13 ]
+[ 9, +1 ]
+[ 10, +1 ]
+[ 11, -3 ]
+[ 12, +4 ]
+[ 13, -5 ]
+[ 14, +1 ]
+[ 15, -1 ]
+[ 16, -4 ]
+[ 17, -1 ]
+[ 18, +1 ]
+[ 19, -3 ]
+[ 20, +1 ]
+[ 21, +1 ]
+[ 23, -2 ]
+[ 24, +2 ]
+[ 28, +1 ]
+[ 33, -1 ]
+[ 39, +1 ]
+[ 41, -1 ]
+[ 58292394, -1 ]
+[ 58292502, +1 ]
+NextCheckpointIsIncremental: 424 20211 2821540 0.00731338205377205
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 11892 743694 43067737 0.0175441305402232
+MustStartFullCheckpoint False
+CompactInternTable
+NextCheckpointIsIncremental: 29700 1879703 56384757 0.0338638153570476
+MustStartFullCheckpoint False
+CompactInternTable
+1166499 Caching output 49
+1166786 Caching output remove 49
+Time to process: 00:19:27.5310676
+[ 2, -23 ]
+[ 3, -7 ]
+[ 4, +3 ]
+[ 5, +3 ]
+[ 6, -3 ]
+[ 7, -7 ]
+[ 8, +2 ]
+[ 9, -2 ]
+[ 10, +3 ]
+[ 11, +8 ]
+[ 12, +4 ]
+[ 13, -1 ]
+[ 14, +3 ]
+[ 15, -3 ]
+[ 16, +2 ]
+[ 17, -2 ]
+[ 18, -1 ]
+[ 19, -4 ]
+[ 20, +5 ]
+[ 21, +1 ]
+[ 22, -1 ]
+[ 23, -1 ]
+[ 25, -1 ]
+[ 26, +2 ]
+[ 29, +1 ]
+[ 30, -1 ]
+[ 32, +1 ]
+[ 33, -1 ]
+[ 34, +1 ]
+[ 40, -1 ]
+[ 58292467, +1 ]
+[ 58292502, -1 ]
+CompactInternTable
+CompactInternTable
+NextCheckpointIsIncremental: 377 20635 2821540 0.00744699702999071
+MustStartFullCheckpoint False
+1184078 Caching output 50
+NextCheckpointIsIncremental: 30726 755586 43067737 0.0182575648216669
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 79728 1909403 56384757 0.0352778145341657
+MustStartFullCheckpoint False
+1186539 Caching output remove 50
+Time to process: 00:19:47.2841192
+[ 2, +13 ]
+[ 3, -1 ]
+[ 4, -7 ]
+[ 5, +3 ]
+[ 6, +4 ]
+[ 7, -10 ]
+[ 8, -3 ]
+[ 9, +13 ]
+[ 10, -3 ]
+[ 11, +4 ]
+[ 12, -2 ]
+[ 14, +2 ]
+[ 15, +1 ]
+[ 16, +1 ]
+[ 18, -1 ]
+[ 19, -2 ]
+[ 20, -5 ]
+[ 21, +4 ]
+[ 22, -1 ]
+[ 23, +1 ]
+[ 25, +1 ]
+[ 27, -3 ]
+[ 29, +1 ]
+[ 34, -1 ]
+[ 35, +1 ]
+[ 37, +1 ]
+[ 58292458, +1 ]
+[ 58292467, -1 ]
+Total time 1187284
+Getting empty frontier from updates 
+NextCheckpointIsIncremental: 0 786312 43067737 0.0182575648216669
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 0 1989131 56384757 0.0352778145341657
+MustStartFullCheckpoint False
+NextCheckpointIsIncremental: 0 21012 2821540 0.00744699702999071
+MustStartFullCheckpoint False
+
+Unhandled Exception:
+System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'handle'.
+  at System.Runtime.InteropServices.SafeHandle.DangerousReleaseInternal (System.Boolean dispose) [0x00040] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Runtime.InteropServices.SafeHandle.DangerousRelease () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.FileStream.Dispose (System.Boolean disposing) [0x00067] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.Stream.Close () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.Stream.Dispose () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.Stream:Dispose ()
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.FileStreamSequence.Close (System.IO.Stream stream) [0x0000c] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.FileStreamSequence.Shutdown () [0x0000d] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.StreamSequence.Shutdown () [0x00000] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.BlockStreamSequence.Shutdown () [0x00000] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.StreamSequenceManager`1[T].Shutdown () [0x0000b] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.Checkpointer`1[T].ShutDown () [0x00055] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Dataflow.Vertex`1[TTime].OnShutdown () [0x0002a] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Frameworks.DifferentialDataflow.OperatorImplementations.UnaryStatefulOperator`5[K,V,S,T,R].OnShutdown () [0x00000] in <070b40881cc44831a22d91fa30535498>:0 
+  at Microsoft.Research.Naiad.Dataflow.Vertex.ShutDown () [0x0001f] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Scheduling.Scheduler.TestComputationsForShutdown (System.Int32 computationIndex) [0x00062] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Scheduling.Scheduler.InternalStart () [0x0006c] in <3534641e0b244434b7176e229b3a7262>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00017] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x0008d] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x00031] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x0000b] in <8f2c484307284b51944a1a13a14c0266>:0 
+[ERROR] FATAL UNHANDLED EXCEPTION: System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'handle'.
+  at System.Runtime.InteropServices.SafeHandle.DangerousReleaseInternal (System.Boolean dispose) [0x00040] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Runtime.InteropServices.SafeHandle.DangerousRelease () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.FileStream.Dispose (System.Boolean disposing) [0x00067] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.Stream.Close () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.IO.Stream.Dispose () [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.Stream:Dispose ()
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.FileStreamSequence.Close (System.IO.Stream stream) [0x0000c] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.FileStreamSequence.Shutdown () [0x0000d] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.StreamSequence.Shutdown () [0x00000] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.BlockStreamSequence.Shutdown () [0x00000] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.StreamSequenceManager`1[T].Shutdown () [0x0000b] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Runtime.FaultTolerance.Checkpointer`1[T].ShutDown () [0x00055] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Dataflow.Vertex`1[TTime].OnShutdown () [0x0002a] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Frameworks.DifferentialDataflow.OperatorImplementations.UnaryStatefulOperator`5[K,V,S,T,R].OnShutdown () [0x00000] in <070b40881cc44831a22d91fa30535498>:0 
+  at Microsoft.Research.Naiad.Dataflow.Vertex.ShutDown () [0x0001f] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Scheduling.Scheduler.TestComputationsForShutdown (System.Int32 computationIndex) [0x00062] in <3534641e0b244434b7176e229b3a7262>:0 
+  at Microsoft.Research.Naiad.Scheduling.Scheduler.InternalStart () [0x0006c] in <3534641e0b244434b7176e229b3a7262>:0 
+  at System.Threading.ThreadHelper.ThreadStart_Context (System.Object state) [0x00017] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.RunInternal (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x0008d] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state, System.Boolean preserveSyncCtx) [0x00000] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ExecutionContext.Run (System.Threading.ExecutionContext executionContext, System.Threading.ContextCallback callback, System.Object state) [0x00031] in <8f2c484307284b51944a1a13a14c0266>:0 
+  at System.Threading.ThreadHelper.ThreadStart () [0x0000b] in <8f2c484307284b51944a1a13a14c0266>:0 
+_wapi_handle_unref_full: Attempting to unref unused handle 0x1b
+_wapi_handle_unref_full: Attempting to unref unused handle 0x1d
+_wapi_handle_unref_full: Attempting to unref unused handle 0x28
+_wapi_handle_unref_full: Attempting to unref unused handle 0x1e
+_wapi_handle_unref_full: Attempting to unref unused handle 0x2a
+_wapi_handle_unref_full: Attempting to unref unused handle 0x29
+_wapi_handle_unref_full: Attempting to unref unused handle 0x26
+_wapi_handle_unref_full: Attempting to unref unused handle 0x2d
+_wapi_handle_unref_full: Attempting to unref unused handle 0x2c
+_wapi_handle_unref_full: Attempting to unref unused handle 0x2e
+_wapi_handle_unref_full: Attempting to unref unused handle 0x2f
+_wapi_handle_unref_full: Attempting to unref unused handle 0x25
