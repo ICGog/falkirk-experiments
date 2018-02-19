@@ -16,6 +16,7 @@ gflags.DEFINE_string('ftmanager_log_path', '',
                      'Path to the ftmanager log file.')
 gflags.DEFINE_string('begin_tag', '', 'Name of begin the event')
 gflags.DEFINE_string('end_tag', '', 'Name of end the event')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
@@ -105,8 +106,8 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     plt.xlabel(label_axis)
     plt.legend(loc=4, frameon=False, handlelength=2.5, handletextpad=0.2)
 
-    plt.savefig("%s.pdf" % plot_file_name,
-                format="pdf", bbox_inches="tight")
+    plt.savefig(plot_file_name + "." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 def main(argv):
     try:

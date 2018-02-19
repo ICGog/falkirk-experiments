@@ -16,6 +16,7 @@ gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('runtime_file_path', '',
                      'Path to the runtime file.')
 gflags.DEFINE_string("num_procs", '', 'Comma-separated list of procs')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 def get_runtime(runtime_file_path, num_proc, ft_types):
     runtime_file = open(runtime_file_path)
@@ -62,7 +63,7 @@ def get_runtime(runtime_file_path, num_proc, ft_types):
 #     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
 #                handletextpad=0.1, numpoints=1)
 
-#     plt.savefig(plot_file_name, format='pdf',
+#     plt.savefig(plot_file_name, format=FLAGS.file_format,
 #                 bbox_inches='tight', pad_inches=0.01)
 
 
@@ -111,7 +112,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
     plt.legend(loc='upper left', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
-    plt.savefig(plot_file_name, format='pdf',
+    plt.savefig(plot_file_name, format=FLAGS.file_format,
                 bbox_inches='tight', pad_inches=0.003)
 
 
@@ -163,7 +164,7 @@ def plot_runtimes(plot_file_name, runtimes, num_procs):
 #    fr.set_linewidth(0)
 #    fr.set_fill(None)
 
-    plt.savefig(plot_file_name, format='pdf',
+    plt.savefig(plot_file_name, format=FLAGS.file_format,
                 bbox_inches='tight', pad_inches=0.01)
 
 
@@ -209,9 +210,9 @@ def main(argv):
         avg_srs = np.mean(runtimes['Naiad SRS w/o selective'][int(num_proc)])
         print (avg_srs - avg_srs_selective) / avg_srs * 100.0
 
-    plot_speedups('cc_selective_speedup_lines.pdf', base, runtimes, [int(x) for x in num_procs])
+    plot_speedups('cc_selective_speedup_lines' + FLAGS.file_format, base, runtimes, [int(x) for x in num_procs])
 #    print runtimes
-#    plot_runtimes('cc_selective_runtime_lines.pdf', runtimes, [int(x) for x in num_procs])
+#    plot_runtimes('cc_selective_runtime_lines' + FLAGS.file_format, runtimes, [int(x) for x in num_procs])
 
 
 if __name__ == '__main__':

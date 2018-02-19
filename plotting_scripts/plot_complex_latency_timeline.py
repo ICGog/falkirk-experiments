@@ -21,7 +21,7 @@ gflags.DEFINE_string('controller_file_path', '',
                      'Path to the controller file.')
 gflags.DEFINE_integer('start_time', 0, 'Start time')
 gflags.DEFINE_integer('end_time', sys.maxint, 'End time')
-gflags.DEFINE_string('plot_format', 'pdf', 'Plot file format')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_rollback_events(input_file_path):
@@ -170,7 +170,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
-    plt.savefig(plot_file_name, format=FLAGS.plot_format,
+    plt.savefig(plot_file_name, format=FLAGS.file_format,
                 bbox_inches='tight', pad_inches=0.01)
 
 
@@ -180,7 +180,7 @@ def main(argv):
     except gflags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
-    plot_latencies('complex_latency_timeline.' + FLAGS.plot_format,
+    plot_latencies('complex_latency_timeline.' + FLAGS.file_format,
                    get_input_latency(FLAGS.input_latency_file_path),
                    get_fast_latency(FLAGS.fast_latency_file_path),
                    get_rollback_events(FLAGS.controller_file_path))

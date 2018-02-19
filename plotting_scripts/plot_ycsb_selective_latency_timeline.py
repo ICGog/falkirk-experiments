@@ -19,6 +19,8 @@ gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
 gflags.DEFINE_integer('start_time', 20, 'Plot start time.')
 gflags.DEFINE_integer('end_time', 46, 'Plot end time.')
 gflags.DEFINE_integer('x_time_increment', 2, 'x axis time increment.')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+
 
 def get_latencies(log_path, offset, low_skip, high_skip):
     print '--------------- ' + log_path + ' ----------------'
@@ -165,8 +167,8 @@ def plot_latencies(plot_file_name, latencies, labels):
     plt.legend(loc='upper right', frameon=False, handlelength=2.5,
                handletextpad=0.2, numpoints=1)
 
-    plt.savefig("%s.pdf" % plot_file_name,
-                format="pdf", bbox_inches="tight")
+    plt.savefig(plot_file_name + "." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 
 def main(argv):

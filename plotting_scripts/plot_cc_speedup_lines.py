@@ -16,6 +16,7 @@ gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('runtime_file_path', '',
                      'Path to the runtime file.')
 gflags.DEFINE_string("num_procs", '', 'Comma-separated list of procs')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 def get_runtime(runtime_file_path, num_proc, ft_type):
     runtime_file = open(runtime_file_path)
@@ -76,7 +77,7 @@ def plot_speedups(plot_file_name, base_runtime, runtimes, num_procs):
 #    fr.set_linewidth(0)
 #    fr.set_fill(None)
 
-    plt.savefig(plot_file_name, format='pdf',
+    plt.savefig(plot_file_name, format=FLAGS.file_format,
                 bbox_inches='tight', pad_inches=0.003)
 
 
@@ -108,7 +109,7 @@ def main(argv):
     #     speedups_srs.append(base / avg_srs)
     #     speedups_naiad.append(base / avg_naiad)
     # speedups = [speedups_srs, speedups_naiad]
-    plot_speedups('cc_speedup_lines.pdf', base, runtimes, [int(x) for x in num_procs])
+    plot_speedups('cc_speedup_lines' + FLAGS.file_format, base, runtimes, [int(x) for x in num_procs])
 
 
 if __name__ == '__main__':

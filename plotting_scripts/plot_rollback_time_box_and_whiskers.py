@@ -21,6 +21,8 @@ gflags.DEFINE_string('end_tag', '', 'Name of end the event')
 gflags.DEFINE_string('ftmanager_log_paths', '',
                      'Comma-separated list of paths to ftmanager log files.')
 gflags.DEFINE_string("xlabels", '', 'list of xlabels')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+
 
 def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
     logfile = open(ftmanager_log_path)
@@ -85,8 +87,8 @@ def plot_rollback_duration(durations, labels, colors):
     plt.yticks(range(0, 6000001, 1000000), range(0, 7, 1))
     plt.ylabel("Max span algorithm runtime [sec]")
     plt.xlabel("Number of processing vertices")
-    plt.savefig("rollback_computation_box_whiskers.pdf",
-                format="pdf", bbox_inches="tight")
+    plt.savefig("rollback_computation_box_whiskers" + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 
 def main(argv):

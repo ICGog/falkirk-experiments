@@ -16,6 +16,7 @@ gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
 gflags.DEFINE_integer('delay_epoch', 5, 'Delay ad event every delay_epoch epochs.')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset):
@@ -113,8 +114,8 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     plt.xlabel(label_axis)
     plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2,)
 
-    plt.savefig("%s.pdf" % plot_file_name,
-                format="pdf", bbox_inches="tight")
+    plt.savefig(plot_file_name + "." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 def main(argv):
     try:

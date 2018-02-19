@@ -17,6 +17,8 @@ gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
 gflags.DEFINE_bool('log_scale', False, 'Plot log scale.')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+
 
 def get_latencies(log_path, offset, low_skip, high_skip):
     print '--------------- ' + log_path + ' ----------------'
@@ -181,8 +183,8 @@ def plot_latencies(plot_file_name, latencies, labels):
         plt.legend(loc='upper left', frameon=False, handlelength=2.0,
                        handletextpad=0.2, numpoints=1)
 
-    plt.savefig("%s.pdf" % plot_file_name,
-                format="pdf", bbox_inches="tight")
+    plt.savefig(plot_file_name + "." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 
 def main(argv):

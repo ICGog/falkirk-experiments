@@ -16,6 +16,7 @@ gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
 gflags.DEFINE_integer('delay_epoch', 5, 'Delay ad event every delay_epoch epochs.')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset):
@@ -104,8 +105,8 @@ def plot_latencies(plot_file_name, latencies, labels):
     plt.yticks(range(0, 1401, 200), range(0, 1401, 200))
     plt.ylabel("Final event latency [ms]")
 
-    plt.savefig("%s.pdf" % plot_file_name,
-                format="pdf", bbox_inches="tight")
+    plt.savefig(plot_file_name + "." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight")
 
 
 def main(argv):

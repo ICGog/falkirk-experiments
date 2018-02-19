@@ -16,6 +16,7 @@ gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('runtime_file_path', '',
                      'Path to the runtime file.')
 gflags.DEFINE_string("num_procs", '', 'Comma-separated list of procs')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 def get_runtime(runtime_file_path, num_proc, ft_type):
     runtime_file = open(runtime_file_path)
@@ -84,7 +85,7 @@ def plot_runtimes(out_file_name, runtimes, labels):
     fr.set_linewidth(0)
     fr.set_fill(None)
 
-    plt.savefig(out_file_name, format='pdf',
+    plt.savefig(out_file_name, format=FLAGS.file_format,
                 bbox_inches='tight', pad_inches=0.01)
 
 
@@ -105,7 +106,7 @@ def main(argv):
                                     'incremental'))
 
 
-    plot_runtimes('cc_runtime_boxes.pdf', runtimes, num_procs)
+    plot_runtimes('cc_runtime_boxes' + FLAGS.file_format, runtimes, num_procs)
 
 
 if __name__ == '__main__':

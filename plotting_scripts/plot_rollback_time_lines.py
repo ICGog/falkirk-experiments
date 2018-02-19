@@ -24,7 +24,7 @@ gflags.DEFINE_string("xlabels", '', 'list of xlabels')
 gflags.DEFINE_string("xlabel_name", 'Number of processing vertices', 'xlabel')
 gflags.DEFINE_integer('max_x', 10000, '')
 gflags.DEFINE_integer('x_increment', 1000, '')
-gflags.DEFINE_string('plot_format', 'pdf', 'Plot file format')
+gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
     logfile = open(ftmanager_log_path)
@@ -95,8 +95,8 @@ def plot_rollback_duration(durations, labels, colors):
     plt.yticks(range(0, 4000001, 1000000), range(0, 5, 1))
     plt.ylabel("Max span algo. runtime [sec]")
     plt.xlabel(FLAGS.xlabel_name)
-    plt.savefig("rollback_computation_lines." + FLAGS.plot_format,
-                format=FLAGS.plot_format, bbox_inches="tight", pad_inches=0.003)
+    plt.savefig("rollback_computation_lines." + FLAGS.file_format,
+                format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.003)
 
 
 def main(argv):
