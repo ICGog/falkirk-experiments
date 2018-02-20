@@ -13,6 +13,7 @@ from utils import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('input_latency_file_path', '',
                      'Path to the file containing input latencies.')
 gflags.DEFINE_string('fast_latency_file_path', '',
@@ -22,7 +23,10 @@ gflags.DEFINE_string('controller_file_path', '',
 gflags.DEFINE_integer('start_time', 0, 'Start time')
 gflags.DEFINE_integer('end_time', sys.maxint, 'End time')
 gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
-
+gflags.DEFINE_bool('workers_paused', True, 'Plot up to workers paused.')
+gflags.DEFINE_bool('rollback_computed', True, 'Plot up to rollback computed.')
+gflags.DEFINE_bool('processors_recovered', True, 'Plot up to processors recovered.')
+gflags.DEFINE_bool('plot_until_end', True, 'Plot until end.')
 
 def get_rollback_events(input_file_path):
     controller_file = open(input_file_path)
@@ -109,18 +113,83 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     if FLAGS.paper_mode:
         plt.figure(figsize=(8, 2))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure(figsize=(12, 6))
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
 
+    last_worker_pause = np.max(workers_paused)
+    last_worker_rollback = np.max(workers_rollback)
+    first_worker_failure = np.min(workers_failed)
+    last_worker_recovered = np.max(workers_recovered)
+
     colors = {'fast':'c', 'input slow':'r', 'input cc':'y'}
     markers = {'fast':'^', 'input slow':'o', 'input cc':'+'}
 
-    plt.plot(event_times, [x / 1000.0 for x in latencies], label='Input stable latency [sec]',
-             color='y', marker='+', markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
+    index = 0
+    stable_event_times = []
+    stable_latencies = []
+    while index < len(event_times) and event_times[index] <= first_worker_failure:
+        stable_event_times.append(event_times[index])
+        stable_latencies.append(latencies[index])
+        index += 1
+
+    while FLAGS.workers_paused and index < len(event_times) and event_times[index] <= last_worker_pause:
+        stable_event_times.append(event_times[index])
+        stable_latencies.append(latencies[index])
+        index += 1
+
+    while FLAGS.rollback_computed and index < len(event_times) and event_times[index] <= last_worker_rollback:
+        stable_event_times.append(event_times[index])
+        stable_latencies.append(latencies[index])
+        index += 1
+
+    while FLAGS.processors_recovered and  index < len(event_times) and event_times[index] <= last_worker_recovered:
+        stable_event_times.append(event_times[index])
+        stable_latencies.append(latencies[index])
+        index += 1
+
+    while FLAGS.plot_until_end and index < len(event_times):
+        stable_event_times.append(event_times[index])
+        stable_latencies.append(latencies[index])
+        index += 1
+
+    index = 0
+    query_event_times = []
+    query_latencies = []
+    while index < len(fast_event_times) and fast_event_times[index] <= first_worker_failure:
+        query_event_times.append(fast_event_times[index])
+        query_latencies.append(fast_latencies[index])
+        index += 1
+
+    while FLAGS.workers_paused and index < len(fast_event_times) and fast_event_times[index] <= last_worker_pause:
+        query_event_times.append(fast_event_times[index])
+        query_latencies.append(fast_latencies[index])
+        index += 1
+
+    while FLAGS.rollback_computed and index < len(fast_event_times) and fast_event_times[index] <= last_worker_rollback:
+        query_event_times.append(fast_event_times[index])
+        query_latencies.append(fast_latencies[index])
+        index += 1
+
+    while FLAGS.processors_recovered and index < len(fast_event_times) and fast_event_times[index] <= last_worker_recovered:
+        query_event_times.append(fast_event_times[index])
+        query_latencies.append(fast_latencies[index])
+        index += 1
+
+    while FLAGS.plot_until_end and index < len(fast_event_times):
+        query_event_times.append(fast_event_times[index])
+        query_latencies.append(fast_latencies[index])
+        index += 1
+
+    plt.plot(stable_event_times, [x / 1000.0 for x in stable_latencies],
+             label='Input stable latency [sec]', color='y', marker='+',
+             markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
 
     plot_label = 'fast'
-    plt.plot(fast_event_times, [x / 1000.0 for x in fast_latencies],
+    plt.plot(query_event_times, [x / 1000.0 for x in query_latencies],
              label='Query latency [sec]', color=colors[plot_label],
              marker=markers[plot_label], mfc='none', markersize=4,
              mec=colors[plot_label], mew=1.0, lw=1.0)
@@ -139,28 +208,35 @@ def plot_latencies(plot_file_name, (latencies, event_times),
 
     duration = (FLAGS.end_time - FLAGS.start_time)
 
-    last_worker_pause = np.max(workers_paused)
-    last_worker_rollback = np.max(workers_rollback)
-    first_worker_failure = np.min(workers_failed)
-    last_worker_recovered = np.max(workers_recovered)
 
     print first_worker_failure, last_worker_pause, last_worker_rollback
 
-    plt.axvline(first_worker_failure, linestyle=':', color='k', lw=0.5)
-    plt.axvline(last_worker_pause, linestyle=':', color='k', lw=0.5)
-    plt.axvline(last_worker_rollback, linestyle=':', color='k', lw=0.5)
-    plt.axvline(last_worker_recovered, linestyle=':', color='k', lw=0.5)
+    separation_lw = 0.5
+    if FLAGS.presentation_mode:
+        separation_lw = 1.0
+
+    plt.axvline(first_worker_failure, linestyle=':', color='k', lw=separation_lw)
     plt.annotate('First\nfailure', xy=(first_worker_failure - 100, 3),
                  xycoords='data', verticalalignment='left', ha='right')
-    plt.annotate('Workers\npaused', xy=(last_worker_pause - 100, 5),
-                 xycoords='data', verticalalignment='right', ha='right')
-    plt.annotate('Rollback\ncomputed', xy=(last_worker_rollback + 100, 10),
-                 xycoords='data', verticalalignment='left', ha='left')
-    plt.annotate('Processors recovered', xy=(last_worker_recovered + 100, 13),
-                 xycoords='data', verticalalignment='left', ha='left')
+
+    if FLAGS.workers_paused:
+        plt.axvline(last_worker_pause, linestyle=':', color='k', lw=separation_lw)
+        plt.annotate('Workers\npaused', xy=(last_worker_pause - 100, 5),
+                     xycoords='data', verticalalignment='right', ha='right')
+        if FLAGS.rollback_computed:
+            plt.axvline(last_worker_rollback, linestyle=':', color='k', lw=separation_lw)
+            plt.annotate('Rollback\ncomputed', xy=(last_worker_rollback + 100, 10),
+                         xycoords='data', verticalalignment='left', ha='left')
+            if FLAGS.processors_recovered:
+                plt.axvline(last_worker_recovered, linestyle=':', color='k', lw=separation_lw)
+                plt.annotate('Processors recovered', xy=(last_worker_recovered + 100, 13),
+                             xycoords='data', verticalalignment='left', ha='left')
 
     plt.ylabel('Latency [sec]')
-    plt.ylim(0, 16)
+    if FLAGS.presentation_mode:
+        plt.ylim(0, 18)
+    else:
+        plt.ylim(0, 16)
 #    plt.yticks()
     plt.xlabel('Experiment time [sec]')
 
@@ -170,8 +246,12 @@ def plot_latencies(plot_file_name, (latencies, event_times),
     plt.legend(loc='upper right', frameon=False, handlelength=1.5,
                handletextpad=0.1, numpoints=1)
 
-    plt.savefig(plot_file_name, format=FLAGS.file_format,
-                bbox_inches='tight', pad_inches=0.01)
+    if FLAGS.paper_mode:
+        plt.savefig(plot_file_name, format=FLAGS.file_format,
+                    bbox_inches='tight', pad_inches=0.01)
+    else:
+        plt.savefig(plot_file_name, format=FLAGS.file_format,
+                    bbox_inches='tight', pad_inches=0.05)
 
 
 def main(argv):

@@ -12,6 +12,7 @@ from box_and_whisker import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('falkirk_input_latency_file_path', '',
                      'Path to the file containing input latencies.')
 gflags.DEFINE_string('falkirk_fast_latency_file_path', '',
@@ -87,24 +88,33 @@ def plot_latencies(latencies, labels):
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure()
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
 
-    print np.mean(latencies[0])
-    print np.mean(latencies[1])
-    print np.mean(latencies[2])
-    print np.mean(latencies[3])
+    # print np.mean(latencies[0])
+    # print np.mean(latencies[1])
+    # print np.mean(latencies[2])
+    # print np.mean(latencies[3])
 
     ax = plt.gca()
-    bp = percentile_box_plot(ax, latencies, color=colors, box_lw=1.0,
-                             median_lw=1.5)
+    if len(latencies) == 2:
+        bp = percentile_box_plot(ax, latencies, color=colors, box_lw=1.5,
+                                     median_lw=1.5, index_step = 2)
+    else:
+        bp = percentile_box_plot(ax, latencies, color=colors, box_lw=1.5,
+                                     median_lw=1.5)
 
     plt.plot(-1, -1, label='Naiad STW', color='m', lw=1.0)
-    plt.plot(-1, -1, label='Naiad SRS', color='b', lw=1.0)
+    if FLAGS.paper_mode:
+        plt.plot(-1, -1, label='Naiad SRS', color='b', lw=1.0)
+    else:
+        plt.plot(-1, -1, label='Naiad Falkirk', color='b', lw=1.0)
 
-    for i in range(2, len(latencies), 2):
-        plt.axvline(i + 0.5, ls='-', color='k')
+    plt.axvline(2.5, ls='-', color='k')
 
     ax.legend(frameon=False, loc="upper center", ncol=6,
               bbox_to_anchor=(0.0, 1.04, 1.0, 0.1), handletextpad=0.2,
@@ -116,7 +126,7 @@ def plot_latencies(latencies, labels):
     plt.yticks(range(0, 25001, 4000), range(0, 26, 4))
     plt.ylabel("Latency [sec]")
     plt.savefig("complex_latency_falkirk_vs_stw." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.003)
+                format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.1)
 
 
 def main(argv):
@@ -128,14 +138,18 @@ def main(argv):
     latencies = []
     (stable_latencies, event_times) = get_input_latency(FLAGS.stw_input_latency_file_path);
     latencies.append(stable_latencies)
-    (stable_latencies, event_times) = get_input_latency(FLAGS.falkirk_input_latency_file_path);
-    latencies.append(stable_latencies)
+    if FLAGS.falkirk_input_latency_file_path != '':
+        (stable_latencies, event_times) = get_input_latency(FLAGS.falkirk_input_latency_file_path)
+        latencies.append(stable_latencies)
+
     (fast_latencies, slow_staleness, cc_staleness, event_times) = get_fast_latency(FLAGS.stw_fast_latency_file_path);
     latencies.append(fast_latencies)
-    (fast_latencies, slow_staleness, cc_staleness, event_times) = get_fast_latency(FLAGS.falkirk_fast_latency_file_path);
-    latencies.append(fast_latencies)
+    if FLAGS.falkirk_fast_latency_file_path != '':
+        (fast_latencies, slow_staleness, cc_staleness, event_times) = get_fast_latency(FLAGS.falkirk_fast_latency_file_path)
+        latencies.append(fast_latencies)
 
     labels = ["Input stable", "Query"]
+
     plot_latencies(latencies, labels)
 
 
