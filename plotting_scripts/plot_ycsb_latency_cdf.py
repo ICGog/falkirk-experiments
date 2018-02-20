@@ -12,6 +12,7 @@ from utils import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
@@ -45,11 +46,14 @@ def get_latencies(log_path, offset):
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
+    colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
         plt.figure(figsize=(2.25, 1.5))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure()
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
@@ -103,15 +107,26 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     else:
         lat_increment = 200
 
-    plt.xlim(0, max_cdf_val)
-    plt.xticks(range(0, max_cdf_val, lat_increment),
-               [str(x) for x in range(0, max_cdf_val, lat_increment)])
+    max_x_val = max_cdf_val
+    if FLAGS.exactly_once:
+        max_x_val = 1896
+    else:
+        max_x_val = 900
+    if max_cdf_val != max_x_val:
+        print 'ATTTENTION: max_cdf_val differs from max_x_val'
+
+    plt.xlim(0, max_x_val)
+    plt.xticks(range(0, max_x_val, lat_increment),
+               [str(x) for x in range(0, max_x_val, lat_increment)])
     plt.ylim(0, 1.0)
-    plt.yticks(np.arange(0.0, 1.01, 0.2),
-               [str(x) for x in np.arange(0.0, 1.01, 0.2)])
+    # plt.yticks(np.arange(0.0, 1.01, 0.2),
+    #            [str(x) for x in np.arange(0.0, 1.01, 0.2)])
     plt.ylabel("CDF of final event latencies")
     plt.xlabel(label_axis)
-    plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2,)
+    if FLAGS.presentation_mode:
+        plt.legend(bbox_to_anchor=(0.62, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
+    else:
+        plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
                 format=FLAGS.file_format, bbox_inches="tight")
@@ -140,15 +155,18 @@ def main(argv):
             print("Unkown label %s" % (labels[index]))
         index = index + 1
     new_labels = []
-    if len(flink) > 0:
-        new_labels.append("Flink")
-        latencies.append(flink)
+    if len(naiad) > 0:
+        if FLAGS.presentation_mode:
+            new_labels.append("Naiad + Falkirk")
+        else:
+            new_labels.append("Naiad + SRS")
+        latencies.append(naiad)
     if len(drizzle) > 0:
         new_labels.append("Drizzle")
         latencies.append(drizzle)
-    if len(naiad) > 0:
-        new_labels.append("Naiad + SRS")
-        latencies.append(naiad)
+    if len(flink) > 0:
+        new_labels.append("Flink")
+        latencies.append(flink)
     plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
 
 

@@ -213,7 +213,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
 
     separation_lw = 0.5
     if FLAGS.presentation_mode:
-        separation_lw = 1.0
+        separation_lw = 2.0
 
     plt.axvline(first_worker_failure, linestyle=':', color='k', lw=separation_lw)
     plt.annotate('First\nfailure', xy=(first_worker_failure - 100, 3),
