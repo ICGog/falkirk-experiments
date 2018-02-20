@@ -16,6 +16,7 @@ from box_and_whisker import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('begin_tag', '', 'Name of begin the event')
 gflags.DEFINE_string('end_tag', '', 'Name of end the event')
 gflags.DEFINE_string('ftmanager_log_paths', '',
@@ -25,6 +26,7 @@ gflags.DEFINE_string("xlabel_name", 'Number of processing vertices', 'xlabel')
 gflags.DEFINE_integer('max_x', 10000, '')
 gflags.DEFINE_integer('x_increment', 1000, '')
 gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+gflags.DEFINE_bool('empty_plot', False, 'Empty plot')
 
 def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
     logfile = open(ftmanager_log_path)
@@ -54,6 +56,9 @@ def plot_rollback_duration(durations, labels, colors):
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 1.66))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure()
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
@@ -74,9 +79,10 @@ def plot_rollback_duration(durations, labels, colors):
         mean_runtimes.append(avg)
         std_runtimes.append(np.std(duration))
 
-    plt.errorbar(num_vertices, mean_runtimes, std_runtimes,
-                 color=colors[0], marker='o', mfc='none',
-                 markersize=4, mec=colors[0], mew=1.0, lw=1.0)
+    if FLAGS.empty_plot is False:
+        plt.errorbar(num_vertices, mean_runtimes, std_runtimes,
+                     color=colors[0], marker='o', mfc='none',
+                     markersize=4, mec=colors[0], mew=1.0, lw=1.0)
 
     xvals = []
     xlabels = []
@@ -95,8 +101,12 @@ def plot_rollback_duration(durations, labels, colors):
     plt.yticks(range(0, 4000001, 1000000), range(0, 5, 1))
     plt.ylabel("Max span algo. runtime [sec]")
     plt.xlabel(FLAGS.xlabel_name)
-    plt.savefig("rollback_computation_lines." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.003)
+    if FLAGS.paper_mode:
+        plt.savefig("rollback_computation_lines." + FLAGS.file_format,
+                    format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.003)
+    else:
+        plt.savefig("rollback_computation_lines." + FLAGS.file_format,
+                    format=FLAGS.file_format, bbox_inches="tight", pad_inches=0.05)
 
 
 def main(argv):
