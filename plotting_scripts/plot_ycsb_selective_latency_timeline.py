@@ -13,6 +13,7 @@ from utils import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
@@ -87,16 +88,27 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #     return (times, maxLatency)
 
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad + SRS + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad + SRS + Selective': '^', 'Drizzle' : '+', 'Naiad + SRS' : 'v', 'Flink' : 'o'}
+    colors = {'Naiad + SRS + Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
+    markers = {'Naiad + SRS + Selective': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad + SRS' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure()
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
     max_y_val = 10000
     max_x_val = 0
+
+    graph_lw = 1.0
+    graph_markersize = 4
+    graph_mew = 0.7
+    if FLAGS.presentation_mode:
+        graph_lw = 2.5
+        graph_markersize = 9
+        graph_mew = 1.0
 
     index = 0
     for lat in latencies:
@@ -118,12 +130,12 @@ def plot_latencies(plot_file_name, latencies, labels):
                          label=labels[index], color=colors[labels[index]],
                          marker=markers[labels[index]], mfc='none',
                          mec=colors[labels[index]],
-                         mew=0.7, lw=1.0, markersize=4)
+                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
         else:
             plt.plot([x for x in range(FLAGS.start_time, FLAGS.end_time, 1)],
                      lat_mean, label=labels[index], color=colors[labels[index]],
                      marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                     mew=0.7, lw=1.0, markersize=4)
+                     mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
 
             # plt.plot([x for x in range(FLAGS.start_time, FLAGS.end_time, 1)],
             #          lat_min, label=labels[index], color=colors[labels[index]],
@@ -147,6 +159,7 @@ def plot_latencies(plot_file_name, latencies, labels):
         max_y = 1201
     else:
         max_y = 1201
+    plt.xlim(FLAGS.start_time, FLAGS.end_time - 1)
     plt.ylim(0, max_y - 1)
     # time_val = 50
     # y_ticks = []
@@ -164,8 +177,12 @@ def plot_latencies(plot_file_name, latencies, labels):
     plt.xticks([x for x in range(FLAGS.start_time, FLAGS.end_time, FLAGS.x_time_increment)],
                [str(x) for x in range(FLAGS.start_time, FLAGS.end_time, FLAGS.x_time_increment)])
     plt.xlabel("Time [sec]")
-    plt.legend(loc='upper right', frameon=False, handlelength=2.5,
-               handletextpad=0.2, numpoints=1)
+    if FLAGS.presentation_mode:
+        plt.legend(loc='upper left', frameon=False, handlelength=1.5,
+                   bbox_to_anchor=(0.43, 0.99), handletextpad=0.2, numpoints=1)
+    else:
+        plt.legend(loc='upper right', frameon=False, handlelength=1.5,
+                       handletextpad=0.2, numpoints=1)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
                 format=FLAGS.file_format, bbox_inches="tight")
@@ -237,10 +254,16 @@ def main(argv):
         new_labels.append("Drizzle")
         latencies.append(drizzle)
     if len(naiad) > 0:
-        new_labels.append("Naiad + SRS")
+        if FLAGS.paper_mode:
+            new_labels.append("Naiad + SRS")
+        else:
+            new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
     if len(naiad_selective) > 0:
-        new_labels.append("Naiad + SRS + Selective")
+        if FLAGS.paper_mode:
+            new_labels.append("Naiad + SRS + Selective")
+        else:
+            new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)
 
     plot_latencies('ycsb_ft_latency_timeline', latencies, new_labels)

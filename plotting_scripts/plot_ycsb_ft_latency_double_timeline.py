@@ -101,9 +101,12 @@ def plot_latencies(plot_file_name, latencies, labels):
     max_x_val = 0
 
     graph_lw = 1.0
+    graph_markersize = 4
+    graph_mew = 0.7
     if FLAGS.presentation_mode:
         graph_lw = 2.0
-
+        graph_markersize = 9
+        graph_mew = 1.0
     index = 0
     for lat in latencies:
 #        max_y_val = max(max_y_val, np.max(latencies[index]))
@@ -137,12 +140,12 @@ def plot_latencies(plot_file_name, latencies, labels):
                 plt.plot([x for x in range(start_x, end_x, 10)],
                          lat_mean, label=labels[index], color=colors[labels[index]],
                          marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                         mew=0.7, lw=graph_lw, markersize=4)
+                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
             else:
                 plt.plot([x for x in range(start_x, end_x, 10)],
                          lat_mean, color=colors[labels[index]],
                          marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                         mew=0.7, lw=graph_lw, markersize=4)
+                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
 
         # hack to add line to legend
         # plt.plot([-100], [-100], label=labels[index],

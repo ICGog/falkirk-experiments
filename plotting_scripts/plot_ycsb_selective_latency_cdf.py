@@ -12,6 +12,7 @@ from utils import *
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
@@ -46,14 +47,21 @@ def get_latencies(log_path, offset):
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Flink' : 'b'}
+    colors = {'Naiad + SRS + Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 2))
         set_paper_rcs()
+    elif FLAGS.presentation_mode:
+        plt.figure()
+        set_presentation_rcs()
     else:
         plt.figure()
         set_rcs()
+
+    graph_lw = 1.0
+    if FLAGS.presentation_mode:
+        graph_lw = 2.5
 
     max_cdf_val = 0
     index = 0
@@ -90,10 +98,11 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         num_bins = bin_range / bin_width
         (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
                                       normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index]])
+                                      histtype="step", color=colors[labels[index]],
+                                      lw=graph_lw)
         # hack to add line to legend
         plt.plot([-100], [-100], label=labels[index],
-                 color=colors[labels[index]], linestyle='solid', lw=1.0)
+                 color=colors[labels[index]], linestyle='solid', lw=graph_lw)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 
@@ -104,15 +113,24 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     else:
         lat_increment = 200
 
-    plt.xlim(0, max_cdf_val)
-    plt.xticks(range(0, max_cdf_val, lat_increment),
-               [str(x) for x in range(0, max_cdf_val, lat_increment)])
+    max_x_val = max_cdf_val
+    if FLAGS.presentation_mode:
+        max_x_val = 1292
+    if max_x_val != max_cdf_val:
+        print 'Attention: max_x_val and max_cdf_val differ'
+
+    plt.xlim(0, max_x_val)
+    plt.xticks(range(0, max_x_val, lat_increment),
+               [str(x) for x in range(0, max_x_val, lat_increment)])
     plt.ylim(0, 1.0)
-    plt.yticks(np.arange(0.0, 1.01, 0.2),
-               [str(x) for x in np.arange(0.0, 1.01, 0.2)])
+    # plt.yticks(np.arange(0.0, 1.01, 0.2),
+    #            [str(x) for x in np.arange(0.0, 1.01, 0.2)])
     plt.ylabel("CDF of final event latencies")
     plt.xlabel(label_axis)
-    plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2,)
+    if FLAGS.presentation_mode:
+        plt.legend(bbox_to_anchor=(0.43, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
+    else:
+        plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
                 format=FLAGS.file_format, bbox_inches="tight")
@@ -150,12 +168,18 @@ def main(argv):
     if len(drizzle) > 0:
         new_labels.append("Drizzle")
         latencies.append(drizzle)
-    if len(naiad) > 0:
-        new_labels.append("Naiad + SRS")
-        latencies.append(naiad)
     if len(naiad_selective) > 0:
-        new_labels.append("Naiad + SRS + Selective")
+        if FLAGS.paper_mode:
+            new_labels.append("Naiad + SRS + Selective")
+        else:
+            new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)
+    if len(naiad) > 0:
+        if FLAGS.paper_mode:
+            new_labels.append("Naiad + SRS")
+        else:
+            new_labels.append("Naiad + Falkirk")
+        latencies.append(naiad)
 
     plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
 

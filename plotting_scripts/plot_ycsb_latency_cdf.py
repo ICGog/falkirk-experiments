@@ -58,6 +58,10 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         plt.figure()
         set_rcs()
 
+    graph_lw = 1.0
+    if FLAGS.presentation_mode:
+        graph_lw = 2.5
+
     max_cdf_val = 0
     index = 0
     for vals in cdf_vals:
@@ -93,10 +97,10 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         num_bins = bin_range / bin_width
         (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
                                       normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index]])
+                                      histtype="step", color=colors[labels[index]], lw=graph_lw)
         # hack to add line to legend
         plt.plot([-100], [-100], label=labels[index],
-                 color=colors[labels[index]], linestyle='solid', lw=1.0)
+                 color=colors[labels[index]], linestyle='solid', lw=graph_lw)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 

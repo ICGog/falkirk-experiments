@@ -184,15 +184,25 @@ def plot_latencies(plot_file_name, (latencies, event_times),
         query_latencies.append(fast_latencies[index])
         index += 1
 
+    graph_lw = 1.0
+    graph_markersize = 4
+    graph_mew = 1.0
+    if FLAGS.presentation_mode:
+        graph_lw = 3.0
+        graph_markersize = 9
+        graph_mew = 2.0
+
     plt.plot(stable_event_times, [x / 1000.0 for x in stable_latencies],
              label='Input stable latency [sec]', color='y', marker='+',
-             markersize=4, mfc='none', mec='y', mew=1.0, lw=1.0)
+             markersize=graph_markersize, mfc='none', mec='y', mew=graph_mew,
+             lw=graph_lw)
 
     plot_label = 'fast'
     plt.plot(query_event_times, [x / 1000.0 for x in query_latencies],
              label='Query latency [sec]', color=colors[plot_label],
-             marker=markers[plot_label], mfc='none', markersize=4,
-             mec=colors[plot_label], mew=1.0, lw=1.0)
+             marker=markers[plot_label], mfc='none',
+             markersize=graph_markersize, mec=colors[plot_label],
+             mew=graph_mew, lw=graph_lw)
 
     # plot_label = 'input slow'
     # plt.plot(event_times, [x / 1000.0 for x in slow_staleness],
