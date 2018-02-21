@@ -79,10 +79,16 @@ def plot_rollback_duration(durations, labels, colors):
         mean_runtimes.append(avg)
         std_runtimes.append(np.std(duration))
 
+    graph_lw = 1.0
+    graph_markersize=4
+    if FLAGS.presentation_mode:
+        graph_lw=2.5
+        graph_markersize=9
+
     if FLAGS.empty_plot is False:
         plt.errorbar(num_vertices, mean_runtimes, std_runtimes,
                      color=colors[0], marker='o', mfc='none',
-                     markersize=4, mec=colors[0], mew=1.0, lw=1.0)
+                     markersize=graph_markersize, mec=colors[0], mew=1.0, lw=graph_lw)
 
     xvals = []
     xlabels = []
