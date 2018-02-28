@@ -54,7 +54,7 @@ def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
 
 def plot_rollback_duration(durations, labels, colors):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 1.66))
+        plt.figure(figsize=(3, 1.5))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()

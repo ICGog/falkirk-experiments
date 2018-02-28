@@ -50,7 +50,7 @@ def get_action_duration(ftmanager_log_path, begin_tag, end_tag):
 
 def plot_rollback_duration(durations, labels, colors):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(3, 1.5))
         set_paper_rcs()
     else:
         plt.figure()
@@ -80,14 +80,14 @@ def plot_rollback_duration(durations, labels, colors):
     #plt.errorbar(range(1, len(setups) + 1), [np.mean(x) for x in runtimes],
     #             yerr=[np.std(x) for x in runtimes], marker="x")
     plt.xlim(0.5, len(durations) + 0.5)
-    plt.ylim(0, 6)
+    plt.ylim(0, 5)
 #    plt.xticks([x * 2 + 1.5 for x in range(0, len(labels))], labels)
     plt.xticks([x + 1 for x in range(0, len(labels))], labels,
                rotation='vertical')
-    plt.yticks(range(0, 6000001, 1000000), range(0, 7, 1))
-    plt.ylabel("Max span algorithm runtime [sec]")
+    plt.yticks(range(0, 5000001, 1000000), range(0, 6, 1))
+    plt.ylabel("Max span algo. runtime [sec]")
     plt.xlabel("Number of processing vertices")
-    plt.savefig("rollback_computation_box_whiskers" + FLAGS.file_format,
+    plt.savefig("rollback_computation_box_whiskers." + FLAGS.file_format,
                 format=FLAGS.file_format, bbox_inches="tight")
 
 
