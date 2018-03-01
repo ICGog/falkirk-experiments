@@ -1,4 +1,4 @@
-# Copyright (c) 2017, Ionel Gog
+# Copyright (c) 2018, Ionel Gog
 
 import csv
 import gflags
@@ -15,7 +15,6 @@ gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
-gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
 gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
@@ -44,12 +43,11 @@ def get_latencies(log_path, offset):
     logfile.close()
     return latencies
 
-
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(2.25, 1.5))
+        plt.figure(figsize=(4.5, 1.5))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -58,14 +56,14 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         plt.figure()
         set_rcs()
 
-    graph_lw = 1.0
+    graph_lw = 1.5
     if FLAGS.presentation_mode:
         graph_lw = 2.5
 
     max_cdf_val = 0
     index = 0
     for vals in cdf_vals:
-        print "Statistics for %s" % (labels[index])
+        print "Statistics for %s" % (labels[index % 3])
         avg = np.mean(vals)
         print "AVG: %f" % (avg)
         median = np.median(vals)
@@ -97,31 +95,28 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         num_bins = bin_range / bin_width
         (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
                                       normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index]], lw=graph_lw)
+                                      histtype="step", color=colors[labels[index % 3]], lw=graph_lw)
         # hack to add line to legend
-        plt.plot([-100], [-100], label=labels[index],
-                 color=colors[labels[index]], linestyle='solid', lw=graph_lw)
+        if index < 3:
+            plt.plot([-100], [-100], label=labels[index],
+                    color=colors[labels[index]], linestyle='solid', lw=graph_lw)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 
         index += 1
 
-    if FLAGS.exactly_once:
-        lat_increment = 300
-    else:
-        lat_increment = 200
+    plt.axvline(900, linestyle='-', color='k', lw=0.5)
 
+    lat_increment = 300
     max_x_val = max_cdf_val
-    if FLAGS.exactly_once:
-        max_x_val = 1896
-    else:
-        max_x_val = 900
-    if max_cdf_val != max_x_val:
-        print 'ATTTENTION: max_cdf_val differs from max_x_val'
-
+#    max_x_val = 1896
     plt.xlim(0, max_x_val)
-    plt.xticks(range(0, max_x_val, lat_increment),
-               [str(x) for x in range(0, max_x_val, lat_increment)])
+    x_ticks = range(0, 900, 200)
+    x_ticks_str = [str(x) for x in range(0, 900, 200)]
+    x_ticks = x_ticks + range(900, max_x_val, 300)
+    x_ticks_str = x_ticks_str + [str(x) for x in range(0, max_x_val - 900, 300)]
+    plt.xticks(x_ticks, x_ticks_str)
+
     plt.ylim(0, 1.0)
     # plt.yticks(np.arange(0.0, 1.01, 0.2),
     #            [str(x) for x in np.arange(0.0, 1.01, 0.2)])
@@ -134,6 +129,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
                 format=FLAGS.file_format, bbox_inches="tight")
+
 
 def main(argv):
     try:
@@ -148,31 +144,45 @@ def main(argv):
     flink = []
     drizzle = []
     naiad = []
+    exact_flink = []
+    exact_drizzle = []
+    exact_naiad = []
+
     for log_path in log_paths:
         if 'Flink' in labels[index]:
-            flink = flink + get_latencies(log_path, 0)
+            if 'ExactFlink' in labels[index]:
+                exact_flink = exact_flink + [x + 900 for x in get_latencies(log_path, 0)]
+            else:
+                flink = flink + get_latencies(log_path, 0)
         elif 'Drizzle' in labels[index]:
-            drizzle = drizzle + get_latencies(log_path, 10000)
+            if 'ExactDrizzle' in labels[index]:
+                exact_drizzle = exact_drizzle + [x + 900 for x in get_latencies(log_path, 10000)]
+            else:
+                drizzle = drizzle + get_latencies(log_path, 10000)
         elif 'Naiad' in labels[index]:
-            naiad = naiad + get_latencies(log_path, 10000)
+            if 'ExactNaiad' in labels[index]:
+                exact_naiad = exact_naiad + [x + 900 for x in get_latencies(log_path, 10000)]
+            else:
+                naiad = naiad + get_latencies(log_path, 10000)
         else:
             print("Unkown label %s" % (labels[index]))
         index = index + 1
     new_labels = []
-    if len(naiad) > 0:
-        if FLAGS.presentation_mode:
-            new_labels.append("Naiad + Falkirk")
-        else:
-            new_labels.append("Naiad + SRS")
-        latencies.append(naiad)
-    if len(drizzle) > 0:
-        new_labels.append("Drizzle")
-        latencies.append(drizzle)
-    if len(flink) > 0:
-        new_labels.append("Flink")
-        latencies.append(flink)
-    plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
+    if FLAGS.presentation_mode:
+        new_labels.append("Naiad + Falkirk")
+    else:
+        new_labels.append("Naiad + SRS")
+    new_labels.append("Drizzle")
+    new_labels.append("Flink")
 
+    latencies.append(naiad)
+    latencies.append(drizzle)
+    latencies.append(flink)
+    latencies.append(exact_naiad)
+    latencies.append(exact_drizzle)
+    latencies.append(exact_flink)
+
+    plot_cdf('ysb_latency_duplicate_exactly_once_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
 
 if __name__ == '__main__':
   main(sys.argv)

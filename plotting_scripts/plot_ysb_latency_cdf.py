@@ -16,7 +16,6 @@ gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
 gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
 gflags.DEFINE_string('labels', '', ', separated list of labels.')
 gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
-gflags.DEFINE_integer('delay_epoch', 5, 'Delay ad event every delay_epoch epochs.')
 gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
@@ -30,7 +29,7 @@ def get_latencies(log_path, offset):
     for row in logfile.readlines():
         fields = [x.strip() for x in row.split(' ')]
         windowTimes.add(int(fields[0]))
-        if len(windowTimes) < 20 or len(windowTimes) % FLAGS.delay_epoch == (FLAGS.delay_epoch - 1):
+        if len(windowTimes) < 3:
             continue
         lastWindowTime = int(fields[0])
         times.append(int(fields[0]))
@@ -47,10 +46,10 @@ def get_latencies(log_path, offset):
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS + Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
+    colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 2))
+        plt.figure(figsize=(2.25, 1.5))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -98,8 +97,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         num_bins = bin_range / bin_width
         (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
                                       normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index]],
-                                      lw=graph_lw)
+                                      histtype="step", color=colors[labels[index]], lw=graph_lw)
         # hack to add line to legend
         plt.plot([-100], [-100], label=labels[index],
                  color=colors[labels[index]], linestyle='solid', lw=graph_lw)
@@ -114,10 +112,12 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         lat_increment = 200
 
     max_x_val = max_cdf_val
-    if FLAGS.presentation_mode:
-        max_x_val = 1292
-    if max_x_val != max_cdf_val:
-        print 'Attention: max_x_val and max_cdf_val differ'
+    if FLAGS.exactly_once:
+        max_x_val = 1896
+    else:
+        max_x_val = 900
+    if max_cdf_val != max_x_val:
+        print 'ATTTENTION: max_cdf_val differs from max_x_val'
 
     plt.xlim(0, max_x_val)
     plt.xticks(range(0, max_x_val, lat_increment),
@@ -128,7 +128,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     plt.ylabel("CDF of final event latencies")
     plt.xlabel(label_axis)
     if FLAGS.presentation_mode:
-        plt.legend(bbox_to_anchor=(0.43, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
+        plt.legend(bbox_to_anchor=(0.62, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
     else:
         plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2)
 
@@ -148,40 +148,30 @@ def main(argv):
     flink = []
     drizzle = []
     naiad = []
-    naiad_selective = []
     for log_path in log_paths:
         if 'Flink' in labels[index]:
             flink = flink + get_latencies(log_path, 0)
         elif 'Drizzle' in labels[index]:
-            drizzle = drizzle + get_latencies(log_path, 1000)
-        elif 'NaiadSelective' in labels[index]:
-            naiad_selective = naiad_selective + get_latencies(log_path, 1000)
+            drizzle = drizzle + get_latencies(log_path, 10000)
         elif 'Naiad' in labels[index]:
-            naiad = naiad + get_latencies(log_path, 1000)
+            naiad = naiad + get_latencies(log_path, 10000)
         else:
             print("Unkown label %s" % (labels[index]))
         index = index + 1
     new_labels = []
-    if len(flink) > 0:
-        new_labels.append("Flink")
-        latencies.append(flink)
+    if len(naiad) > 0:
+        if FLAGS.presentation_mode:
+            new_labels.append("Naiad + Falkirk")
+        else:
+            new_labels.append("Naiad + SRS")
+        latencies.append(naiad)
     if len(drizzle) > 0:
         new_labels.append("Drizzle")
         latencies.append(drizzle)
-    if len(naiad_selective) > 0:
-        if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS + Selective")
-        else:
-            new_labels.append("Naiad + Falkirk + Selective")
-        latencies.append(naiad_selective)
-    if len(naiad) > 0:
-        if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS")
-        else:
-            new_labels.append("Naiad + Falkirk")
-        latencies.append(naiad)
-
-    plot_cdf('ycsb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
+    if len(flink) > 0:
+        new_labels.append("Flink")
+        latencies.append(flink)
+    plot_cdf('ysb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
 
 
 if __name__ == '__main__':

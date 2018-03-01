@@ -111,10 +111,10 @@ def plot_latencies(plot_file_name, (latencies, event_times),
                    (fast_latencies, slow_staleness, cc_staleness, fast_event_times),
                    (workers_failed, workers_paused, workers_rollback, workers_recovered)):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(8, 2))
+        plt.figure(figsize=(7.8, 1.4))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(11, 5.5))
         set_presentation_rcs()
     else:
         plt.figure()
@@ -184,7 +184,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
         query_latencies.append(fast_latencies[index])
         index += 1
 
-    graph_lw = 1.0
+    graph_lw = 1.5
     graph_markersize = 4
     graph_mew = 1.0
     if FLAGS.presentation_mode:
