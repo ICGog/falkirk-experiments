@@ -86,10 +86,10 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #     return (times, maxLatency)
 
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad + SRS': '^', 'Naiad + Falkirk': '^', 'Drizzle' : '+', 'Spark' : 'v', 'Flink' : 'o'}
+    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
+    markers = {'Naiad SRS': '^', 'Naiad + Falkirk': '^', 'Drizzle' : '+', 'Spark' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
-        plt.figure(figsize=(6, 1.5))
+        plt.figure(figsize=(6, 1.2))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure(figsize=(12, 6))
@@ -159,15 +159,15 @@ def plot_latencies(plot_file_name, latencies, labels):
     plt.axvline(240, linestyle=':', color='k', lw=separation_lw)
     plt.annotate('Worker failure', xy=(242, 2000),
                  xycoords='data', verticalalignment='left', ha='left')
-    plt.annotate("\\textbf{Duplicate}", xy=(230, 2400),
+    plt.annotate("\\textbf{At-least-once}", xy=(220, 2400),
                  xycoords='data', verticalalignment='left', ha='left')
     plt.axvline(360, linestyle='-', color='k', lw=separation_lw)
     plt.axvline(460, linestyle=':', color='k', lw=separation_lw)
     plt.annotate('Worker failure', xy=(458, 2000),
                  xycoords='data', verticalalignment='left', ha='right')
-    plt.annotate("\\textbf{Exactly once}", xy=(498, 2400),
+    plt.annotate("\\textbf{Exactly-once}", xy=(498, 2400),
                  xycoords='data', verticalalignment='left', ha='right')
-    plt.ylabel('Final event latency [ms]')
+    plt.ylabel('Response latency [ms]')
     if FLAGS.log_scale is False:
         if FLAGS.error_bars:
             max_y_val = 3601
@@ -193,7 +193,7 @@ def plot_latencies(plot_file_name, latencies, labels):
     #[x for x in range(150, 561, 50)],
     plt.xticks([x for x in range(150, 351, 50)] + [x for x in range(370, 571, 50)],
                [str(x) for x in range(150, 351, 50)] + [str(x) for x in range(150, 351, 50)])
-    plt.xlabel("Time [sec]")
+    plt.xlabel("Time [sec]",labelpad=0.01)
     if FLAGS.log_scale:
         plt.legend(loc='lower right', frameon=False, handlelength=1.0,
                        handletextpad=0.2, numpoints=1)
@@ -297,7 +297,7 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS")
+            new_labels.append("Naiad SRS")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
@@ -310,7 +310,7 @@ def main(argv):
         latencies.append(exact_drizzle)
     if len(exact_naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS")
+            new_labels.append("Naiad SRS")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(exact_naiad)

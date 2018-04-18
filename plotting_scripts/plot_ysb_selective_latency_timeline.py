@@ -88,10 +88,10 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #     return (times, maxLatency)
 
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad + SRS + Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad + SRS' : 'm', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad + SRS + Selective': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad + SRS' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
+    colors = {'Naiad SRS Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad SRS' : 'y', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
+    markers = {'Naiad SRS Selective': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad SRS' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 1.66))
+        plt.figure(figsize=(3, 1.3))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -153,7 +153,7 @@ def plot_latencies(plot_file_name, latencies, labels):
 
         index = index + 1
 #    plt.yscale("log")
-    plt.ylabel('Final event latency [ms]')
+    plt.ylabel('Response latency [ms]')
     max_y = 0
     if FLAGS.error_bars:
         max_y = 1201
@@ -255,13 +255,13 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS")
+            new_labels.append("Naiad SRS")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
     if len(naiad_selective) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad + SRS + Selective")
+            new_labels.append("Naiad SRS Selective")
         else:
             new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)

@@ -46,10 +46,10 @@ def get_latencies(log_path, offset):
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
+    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(2.25, 1.5))
+        plt.figure(figsize=(2.25, 1.3))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -123,9 +123,15 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     plt.xticks(range(0, max_x_val, lat_increment),
                [str(x) for x in range(0, max_x_val, lat_increment)])
     plt.ylim(0, 1.0)
-    # plt.yticks(np.arange(0.0, 1.01, 0.2),
-    #            [str(x) for x in np.arange(0.0, 1.01, 0.2)])
-    plt.ylabel("CDF of final event latencies")
+    y_ticks = []
+    y_val = 0
+    while y_val <= 1.0:
+        y_ticks.append(y_val)
+        y_val += 0.2
+    plt.yticks(y_ticks, [str(y) for y in y_ticks])
+    plt.ylabel("CDF of response latencies", labelpad=0.01)
+    ax = plt.gca()
+    ax.yaxis.set_label_coords(-0.16, 0.4)
     plt.xlabel(label_axis)
     if FLAGS.presentation_mode:
         plt.legend(bbox_to_anchor=(0.62, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
@@ -163,7 +169,7 @@ def main(argv):
         if FLAGS.presentation_mode:
             new_labels.append("Naiad + Falkirk")
         else:
-            new_labels.append("Naiad + SRS")
+            new_labels.append("Naiad SRS")
         latencies.append(naiad)
     if len(drizzle) > 0:
         new_labels.append("Drizzle")
@@ -171,7 +177,7 @@ def main(argv):
     if len(flink) > 0:
         new_labels.append("Flink")
         latencies.append(flink)
-    plot_cdf('ysb_latency_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
+    plot_cdf('ysb_latency_cdf', latencies, 'Response latency [ms]', new_labels, bin_width=1)
 
 
 if __name__ == '__main__':

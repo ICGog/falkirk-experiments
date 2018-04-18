@@ -111,7 +111,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
                    (fast_latencies, slow_staleness, cc_staleness, fast_event_times),
                    (workers_failed, workers_paused, workers_rollback, workers_recovered)):
     if FLAGS.paper_mode:
-        plt.figure(figsize=(7.8, 1.4))
+        plt.figure(figsize=(7.8, 1.1))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure(figsize=(11, 5.5))
@@ -231,7 +231,7 @@ def plot_latencies(plot_file_name, (latencies, event_times),
 
     if FLAGS.workers_paused:
         plt.axvline(last_worker_pause, linestyle=':', color='k', lw=separation_lw)
-        plt.annotate('Workers\npaused', xy=(last_worker_pause - 100, 5),
+        plt.annotate('Processors\npaused', xy=(last_worker_pause - 110, 5),
                      xycoords='data', verticalalignment='right', ha='right')
         if FLAGS.rollback_computed:
             plt.axvline(last_worker_rollback, linestyle=':', color='k', lw=separation_lw)
@@ -247,8 +247,9 @@ def plot_latencies(plot_file_name, (latencies, event_times),
         plt.ylim(0, 18)
     else:
         plt.ylim(0, 16)
-#    plt.yticks()
-    plt.xlabel('Experiment time [sec]')
+    y_ticks = [x for x in range(0, 17, 2)]
+    plt.yticks(y_ticks, [str(y) for y in y_ticks])
+    plt.xlabel('Experiment time [sec]', labelpad=0.01)
 
     plt.xlim(FLAGS.start_time, FLAGS.end_time)
     plt.xticks([x for x in range(FLAGS.start_time, FLAGS.end_time, 5000)],

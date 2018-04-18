@@ -84,9 +84,9 @@ def get_fast_latency(input_file_path):
 
 
 def plot_latencies(latencies, labels):
-    colors = ['y', 'm', 'b', 'm', 'b', 'm', 'b']
+    colors = ['y', 'y', 'r', 'y', 'r', 'y', 'r']
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 1.5))
+        plt.figure(figsize=(3, 1.3))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -108,16 +108,16 @@ def plot_latencies(latencies, labels):
         bp = percentile_box_plot(ax, latencies, color=colors, box_lw=1.5,
                                      median_lw=1.5)
 
-    plt.plot(-1, -1, label='Naiad STW', color='m', lw=1.5)
+    plt.plot(-1, -1, label='Naiad STW', color='y', lw=1.3)
     if FLAGS.paper_mode:
-        plt.plot(-1, -1, label='Naiad SRS', color='b', lw=1.5)
+        plt.plot(-1, -1, label='Naiad SRS', color='r', lw=1.3)
     else:
-        plt.plot(-1, -1, label='Naiad Falkirk', color='b', lw=1.0)
+        plt.plot(-1, -1, label='Naiad Falkirk', color='r', lw=1.0)
 
     plt.axvline(2.5, ls='-', color='k')
 
     ax.legend(frameon=False, loc="upper center", ncol=6,
-              bbox_to_anchor=(0.0, 1.06, 1.0, 0.1), handletextpad=0.2,
+              bbox_to_anchor=(0.0, 1.1, 1.0, 0.1), handletextpad=0.2,
               columnspacing=0.2)
 
     plt.xlim(0.5, 2 * len(labels) + 0.5)
