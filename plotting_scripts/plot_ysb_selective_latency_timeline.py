@@ -88,10 +88,10 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #     return (times, maxLatency)
 
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad SRS Selective': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad SRS' : 'y', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad SRS Selective': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad SRS' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
+    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad SRS w/o Selective' : 'y', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
+    markers = {'Naiad SRS': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad SRS w/o Selective' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3, 1.3))
+        plt.figure(figsize=(3.3, 1.3))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -255,13 +255,13 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS")
+            new_labels.append("Naiad SRS w/o Selective")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
     if len(naiad_selective) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS Selective")
+            new_labels.append("Naiad SRS")
         else:
             new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)
