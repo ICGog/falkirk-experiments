@@ -1,7 +1,7 @@
 # Copyright (c) 2017, Ionel Gog
 
 import csv
-import gflags
+from absl import app, flags
 import math
 import matplotlib
 matplotlib.use("agg")
@@ -11,18 +11,19 @@ import numpy as np
 from collections import defaultdict
 from utils import *
 
-FLAGS = gflags.FLAGS
-gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
-gflags.DEFINE_string('labels', '', ', separated list of labels.')
-gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
-gflags.DEFINE_bool('log_scale', False, 'Plot log scale.')
-gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+FLAGS = flags.FLAGS
+flags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_string('log_paths', '',
+                    ', separated list of path to the log files.')
+flags.DEFINE_string('labels', '', ', separated list of labels.')
+flags.DEFINE_bool('error_bars', False, 'Plot error bars.')
+flags.DEFINE_bool('log_scale', False, 'Plot log scale.')
+flags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset, low_skip, high_skip):
-    print '--------------- ' + log_path + ' ----------------'
+    print('--------------- ' + log_path + ' ----------------')
     latencies = {}
     tlatencies = {}
     windowTimes = set({})
@@ -45,7 +46,7 @@ def get_latencies(log_path, offset, low_skip, high_skip):
         else:
             tlatencies[curTime] = [latOffset]
     logfile.close()
-    keylist = tlatencies.keys()
+    keylist = list(tlatencies.keys())
     keylist.sort()
     maxLatency = []
     for key in keylist:
@@ -85,9 +86,22 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #         maxLatency.append(latencies[key])
 #     return (times, maxLatency)
 
+
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad SRS': '^', 'Naiad + Falkirk': '^', 'Drizzle' : '+', 'Spark' : 'v', 'Flink' : 'o'}
+    colors = {
+        'SmartFT': 'r',
+        'Naiad + Falkirk': 'r',
+        'Drizzle': 'c',
+        'Spark': 'm',
+        'Flink': 'b'
+    }
+    markers = {
+        'SmartFT': '^',
+        'Naiad + Falkirk': '^',
+        'Drizzle': '+',
+        'Spark': 'v',
+        'Flink': 'o'
+    }
     if FLAGS.paper_mode:
         plt.figure(figsize=(6, 1.2))
         set_paper_rcs()
@@ -109,9 +123,9 @@ def plot_latencies(plot_file_name, latencies, labels):
         graph_mew = 1.0
     index = 0
     for lat in latencies:
-#        max_y_val = max(max_y_val, np.max(latencies[index]))
-#        max_x_val = max(max_x_val, np.max(curTimes))
-        print len(latencies[index])
+        #        max_y_val = max(max_y_val, np.max(latencies[index]))
+        #        max_x_val = max(max_x_val, np.max(curTimes))
+        print(len(latencies[index]))
         lat_mean = []
         lat_std = []
         for lats in latencies[index]:
@@ -125,27 +139,50 @@ def plot_latencies(plot_file_name, latencies, labels):
             end_x = 579
         if FLAGS.error_bars:
             if index < 3:
-                plt.errorbar([x for x in range(start_x, end_x, 10)], lat_mean, lat_std,
-                             label=labels[index], color=colors[labels[index]],
-                             marker=markers[labels[index]], mfc='none',
+                plt.errorbar([x for x in range(start_x, end_x, 10)],
+                             lat_mean,
+                             lat_std,
+                             label=labels[index],
+                             color=colors[labels[index]],
+                             marker=markers[labels[index]],
+                             mfc='none',
                              mec=colors[labels[index]],
-                             mew=0.02, lw=0.7, markersize=3)
+                             mew=0.02,
+                             lw=0.7,
+                             markersize=3)
             else:
-                plt.errorbar([x for x in range(start_x, end_x, 10)], lat_mean, lat_std,
-                             color=colors[labels[index]], marker=markers[labels[index]],
-                             mfc='none', mec=colors[labels[index]],
-                             mew=0.02, lw=0.7, markersize=3)
+                plt.errorbar([x for x in range(start_x, end_x, 10)],
+                             lat_mean,
+                             lat_std,
+                             color=colors[labels[index]],
+                             marker=markers[labels[index]],
+                             mfc='none',
+                             mec=colors[labels[index]],
+                             mew=0.02,
+                             lw=0.7,
+                             markersize=3)
         else:
             if index < 3:
                 plt.plot([x for x in range(start_x, end_x, 10)],
-                         lat_mean, label=labels[index], color=colors[labels[index]],
-                         marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
+                         lat_mean,
+                         label=labels[index],
+                         color=colors[labels[index]],
+                         marker=markers[labels[index]],
+                         mfc='none',
+                         mec=colors[labels[index]],
+                         mew=graph_mew,
+                         lw=graph_lw,
+                         markersize=graph_markersize)
             else:
                 plt.plot([x for x in range(start_x, end_x, 10)],
-                         lat_mean, color=colors[labels[index]],
-                         marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
+                         lat_mean,
+                         color=colors[labels[index]],
+                         marker=markers[labels[index]],
+                         mfc='none',
+                         mec=colors[labels[index]],
+                         mew=graph_mew,
+                         lw=graph_lw,
+                         markersize=graph_markersize)
 
         # hack to add line to legend
         # plt.plot([-100], [-100], label=labels[index],
@@ -157,16 +194,28 @@ def plot_latencies(plot_file_name, latencies, labels):
     if FLAGS.presentation_mode:
         separation_lw = 2.0
     plt.axvline(240, linestyle=':', color='k', lw=separation_lw)
-    plt.annotate('Worker failure', xy=(242, 2000),
-                 xycoords='data', verticalalignment='left', ha='left')
-    plt.annotate("\\textbf{At-least-once}", xy=(220, 2400),
-                 xycoords='data', verticalalignment='left', ha='left')
+    plt.annotate('Worker failure',
+                 xy=(242, 2100),
+                 xycoords='data',
+                 verticalalignment='center',
+                 ha='left')
+    plt.annotate("\\textbf{At-least-once}",
+                 xy=(220, 2400),
+                 xycoords='data',
+                 verticalalignment='bottom',
+                 ha='left')
     plt.axvline(360, linestyle='-', color='k', lw=separation_lw)
     plt.axvline(460, linestyle=':', color='k', lw=separation_lw)
-    plt.annotate('Worker failure', xy=(458, 2000),
-                 xycoords='data', verticalalignment='left', ha='right')
-    plt.annotate("\\textbf{Exactly-once}", xy=(498, 2400),
-                 xycoords='data', verticalalignment='left', ha='right')
+    plt.annotate('Worker failure',
+                 xy=(458, 2100),
+                 xycoords='data',
+                 verticalalignment='center',
+                 ha='right')
+    plt.annotate("\\textbf{Exactly-once}",
+                 xy=(498, 2400),
+                 xycoords='data',
+                 verticalalignment='bottom',
+                 ha='right')
     plt.ylabel('Response latency [ms]')
     if FLAGS.log_scale is False:
         if FLAGS.error_bars:
@@ -191,31 +240,44 @@ def plot_latencies(plot_file_name, latencies, labels):
 
     plt.xlim(150, 570)
     #[x for x in range(150, 561, 50)],
-    plt.xticks([x for x in range(150, 351, 50)] + [x for x in range(370, 571, 50)],
-               [str(x) for x in range(150, 351, 50)] + [str(x) for x in range(150, 351, 50)])
-    plt.xlabel("Time [sec]",labelpad=0.01)
+    plt.xticks(
+        [x for x in range(150, 351, 50)] + [x for x in range(370, 571, 50)],
+        [str(x)
+         for x in range(150, 351, 50)] + [str(x) for x in range(150, 351, 50)])
+    plt.xlabel("Time [sec]", labelpad=0.01)
     if FLAGS.log_scale:
-        plt.legend(loc='lower right', frameon=False, handlelength=1.0,
-                       handletextpad=0.2, numpoints=1)
+        plt.legend(loc='lower right',
+                   frameon=False,
+                   handlelength=1.0,
+                   handletextpad=0.2,
+                   numpoints=1)
     else:
         if FLAGS.presentation_mode:
-            plt.legend(loc='upper left', frameon=False, handlelength=1.0,
-                       ncol=3, bbox_to_anchor=(0.22, 1.11),
-                       handletextpad=0.2, numpoints=1)
+            plt.legend(loc='upper left',
+                       frameon=False,
+                       handlelength=1.0,
+                       ncol=3,
+                       bbox_to_anchor=(0.22, 1.11),
+                       handletextpad=0.2,
+                       numpoints=1)
         else:
-            plt.legend(loc='upper left', frameon=False, handlelength=1.0,
-                       handletextpad=0.2, numpoints=1)
+            plt.legend(loc='upper left',
+                       frameon=False,
+                       handlelength=1.0,
+                       handletextpad=0.2,
+                       labelspacing=0.2,
+                       numpoints=1)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight")
+                format=FLAGS.file_format,
+                bbox_inches="tight")
 
 
 def main(argv):
     try:
         argv = FLAGS(argv)
-    except gflags.FlagsError as e:
+    except flags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
-
 
     log_paths = FLAGS.log_paths.split(',')
     labels = FLAGS.labels.split(',')
@@ -297,7 +359,7 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS")
+            new_labels.append("SmartFT")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
@@ -310,7 +372,7 @@ def main(argv):
         latencies.append(exact_drizzle)
     if len(exact_naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS")
+            new_labels.append("SmartFT")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(exact_naiad)
@@ -318,4 +380,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-  main(sys.argv)
+    app.run(main)

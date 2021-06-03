@@ -1,7 +1,7 @@
 # Copyright (c) 2017, Ionel Gog
 
 import csv
-import gflags
+from absl import app, flags
 import math
 import matplotlib
 matplotlib.use("agg")
@@ -11,20 +11,21 @@ import numpy as np
 from collections import defaultdict
 from utils import *
 
-FLAGS = gflags.FLAGS
-gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
-gflags.DEFINE_string('labels', '', ', separated list of labels.')
-gflags.DEFINE_bool('error_bars', False, 'Plot error bars.')
-gflags.DEFINE_integer('start_time', 20, 'Plot start time.')
-gflags.DEFINE_integer('end_time', 46, 'Plot end time.')
-gflags.DEFINE_integer('x_time_increment', 2, 'x axis time increment.')
-gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+FLAGS = flags.FLAGS
+flags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_string('log_paths', '',
+                    ', separated list of path to the log files.')
+flags.DEFINE_string('labels', '', ', separated list of labels.')
+flags.DEFINE_bool('error_bars', False, 'Plot error bars.')
+flags.DEFINE_integer('start_time', 20, 'Plot start time.')
+flags.DEFINE_integer('end_time', 46, 'Plot end time.')
+flags.DEFINE_integer('x_time_increment', 2, 'x axis time increment.')
+flags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset, low_skip, high_skip):
-    print '--------------- ' + log_path + ' ----------------'
+    print('--------------- ' + log_path + ' ----------------')
     latencies = {}
     tlatencies = {}
     windowTimes = set({})
@@ -47,7 +48,7 @@ def get_latencies(log_path, offset, low_skip, high_skip):
         else:
             tlatencies[curTime] = [latOffset]
     logfile.close()
-    keylist = tlatencies.keys()
+    keylist = list(tlatencies.keys())
     keylist.sort()
     maxLatency = []
     for key in keylist:
@@ -87,11 +88,26 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 #         maxLatency.append(latencies[key])
 #     return (times, maxLatency)
 
+
 def plot_latencies(plot_file_name, latencies, labels):
-    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad SRS w/o Selective' : 'y', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
-    markers = {'Naiad SRS': '^', 'Naiad + Falkirk + Selective': '^', 'Drizzle' : '+', 'Naiad SRS w/o Selective' : 'v', 'Naiad + Falkirk' : 'v', 'Flink' : 'o'}
+    colors = {
+        'SmartFT': 'r',
+        'Naiad + Falkirk + Selective': 'r',
+        'Drizzle': 'c',
+        'SmartFT w/o Selective': 'y',
+        'Naiad + Falkirk': 'm',
+        'Flink': 'b'
+    }
+    markers = {
+        'SmartFT': '^',
+        'Naiad + Falkirk + Selective': '^',
+        'Drizzle': '+',
+        'SmartFT w/o Selective': 'v',
+        'Naiad + Falkirk': 'v',
+        'Flink': 'o'
+    }
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3.3, 1.3))
+        plt.figure(figsize=(3.3, 1.1))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -112,9 +128,9 @@ def plot_latencies(plot_file_name, latencies, labels):
 
     index = 0
     for lat in latencies:
-#        max_y_val = max(max_y_val, np.max(latencies[index]))
-#        max_x_val = max(max_x_val, np.max(curTimes))
-        print len(latencies[index])
+        #        max_y_val = max(max_y_val, np.max(latencies[index]))
+        #        max_x_val = max(max_x_val, np.max(curTimes))
+        print(len(latencies[index]))
         lat_mean = []
         lat_std = []
         lat_max = []
@@ -126,16 +142,29 @@ def plot_latencies(plot_file_name, latencies, labels):
             lat_min.append(np.min(lats))
 
         if FLAGS.error_bars:
-            plt.errorbar([x for x in range(FLAGS.start_time, FLAGS.end_time, 1)], lat_mean, lat_std,
-                         label=labels[index], color=colors[labels[index]],
-                         marker=markers[labels[index]], mfc='none',
-                         mec=colors[labels[index]],
-                         mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
+            plt.errorbar(
+                [x for x in range(FLAGS.start_time, FLAGS.end_time, 1)],
+                lat_mean,
+                lat_std,
+                label=labels[index],
+                color=colors[labels[index]],
+                marker=markers[labels[index]],
+                mfc='none',
+                mec=colors[labels[index]],
+                mew=graph_mew,
+                lw=graph_lw,
+                markersize=graph_markersize)
         else:
             plt.plot([x for x in range(FLAGS.start_time, FLAGS.end_time, 1)],
-                     lat_mean, label=labels[index], color=colors[labels[index]],
-                     marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
-                     mew=graph_mew, lw=graph_lw, markersize=graph_markersize)
+                     lat_mean,
+                     label=labels[index],
+                     color=colors[labels[index]],
+                     marker=markers[labels[index]],
+                     mfc='none',
+                     mec=colors[labels[index]],
+                     mew=graph_mew,
+                     lw=graph_lw,
+                     markersize=graph_markersize)
 
             # plt.plot([x for x in range(FLAGS.start_time, FLAGS.end_time, 1)],
             #          lat_min, label=labels[index], color=colors[labels[index]],
@@ -146,14 +175,17 @@ def plot_latencies(plot_file_name, latencies, labels):
             #          marker=markers[labels[index]], mfc='none', mec=colors[labels[index]],
             #          mew=0.7, lw=1.0, markersize=4)
 
-
         # hack to add line to legend
         # plt.plot([-100], [-100], label=labels[index],
         #          color=colors[labels[index]], linestyle='solid', lw=1.0)
 
         index = index + 1
+
+
 #    plt.yscale("log")
     plt.ylabel('Response latency [ms]')
+    ax = plt.gca()
+    ax.yaxis.set_label_coords(-0.14, 0.4)
     max_y = 0
     if FLAGS.error_bars:
         max_y = 1201
@@ -170,30 +202,41 @@ def plot_latencies(plot_file_name, latencies, labels):
     #   time_val *= 10
     # y_ticks.append(time_val)
 
-
-    y_ticks = [x for x in range(0, max_y, 200)]
+    y_ticks = [x for x in range(0, max_y, 300)]
     plt.yticks(y_ticks, [str(x) for x in y_ticks])
 
-    plt.xticks([x for x in range(FLAGS.start_time, FLAGS.end_time, FLAGS.x_time_increment)],
-               [str(x) for x in range(FLAGS.start_time, FLAGS.end_time, FLAGS.x_time_increment)])
+    plt.xticks([
+        x for x in range(FLAGS.start_time, FLAGS.end_time,
+                         FLAGS.x_time_increment)
+    ], [
+        str(x) for x in range(FLAGS.start_time, FLAGS.end_time,
+                              FLAGS.x_time_increment)
+    ])
     plt.xlabel("Time [sec]")
     if FLAGS.presentation_mode:
-        plt.legend(loc='upper left', frameon=False, handlelength=1.0,
-                   bbox_to_anchor=(0.43, 0.99), handletextpad=0.2, numpoints=1)
+        plt.legend(loc='upper left',
+                   frameon=False,
+                   handlelength=1.0,
+                   bbox_to_anchor=(0.43, 0.99),
+                   handletextpad=0.2,
+                   numpoints=1)
     else:
-        plt.legend(loc='upper right', frameon=False, handlelength=1.0,
-                       handletextpad=0.2, numpoints=1)
+        plt.legend(loc='upper right',
+                   frameon=False,
+                   handlelength=1.0,
+                   handletextpad=0.2,
+                   numpoints=1)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight")
+                format=FLAGS.file_format,
+                bbox_inches="tight")
 
 
 def main(argv):
     try:
         argv = FLAGS(argv)
-    except gflags.FlagsError as e:
+    except flags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
-
 
     log_paths = FLAGS.log_paths.split(',')
     labels = FLAGS.labels.split(',')
@@ -210,7 +253,8 @@ def main(argv):
         else:
             offset = 1000
         if 'Flink' in labels[index]:
-            lats = get_latencies(log_path, offset, FLAGS.start_time, FLAGS.end_time)
+            lats = get_latencies(log_path, offset, FLAGS.start_time,
+                                 FLAGS.end_time)
             if len(flink) < 1:
                 flink = lats
             else:
@@ -219,7 +263,8 @@ def main(argv):
                     flink[lindex] = flink[lindex] + lat
                     lindex = lindex + 1
         elif 'Drizzle' in labels[index]:
-            lats = get_latencies(log_path, offset, FLAGS.start_time, FLAGS.end_time)
+            lats = get_latencies(log_path, offset, FLAGS.start_time,
+                                 FLAGS.end_time)
             if len(drizzle) < 1:
                 drizzle = lats
             else:
@@ -228,7 +273,8 @@ def main(argv):
                     drizzle[lindex] = drizzle[lindex] + lat
                     lindex = lindex + 1
         elif 'Naiad' in labels[index]:
-            lats = get_latencies(log_path, offset, FLAGS.start_time, FLAGS.end_time)
+            lats = get_latencies(log_path, offset, FLAGS.start_time,
+                                 FLAGS.end_time)
             if 'Selective' in labels[index]:
                 if len(naiad_selective) < 1:
                     naiad_selective = lats
@@ -255,13 +301,13 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS w/o Selective")
+            new_labels.append("SmartFT w/o Selective")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
     if len(naiad_selective) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS")
+            new_labels.append("SmartFT")
         else:
             new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)
@@ -270,4 +316,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-  main(sys.argv)
+    app.run(main)

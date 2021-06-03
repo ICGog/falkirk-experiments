@@ -1,7 +1,7 @@
 # Copyright (c) 2018, Ionel Gog
 
 import csv
-import gflags
+from absl import app, flags
 import math
 import matplotlib
 matplotlib.use("agg")
@@ -10,12 +10,13 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from utils import *
 
-FLAGS = gflags.FLAGS
-gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
-gflags.DEFINE_string('labels', '', ', separated list of labels.')
-gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+FLAGS = flags.FLAGS
+flags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_string('log_paths', '',
+                    ', separated list of path to the log files.')
+flags.DEFINE_string('labels', '', ', separated list of labels.')
+flags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset):
@@ -43,8 +44,15 @@ def get_latencies(log_path, offset):
     logfile.close()
     return latencies
 
+
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad + SRS': 'r', 'Naiad + Falkirk': 'r', 'Drizzle' : 'c', 'Spark' : 'm', 'Flink' : 'b'}
+    colors = {
+        'Naiad + SRS': 'r',
+        'Naiad + Falkirk': 'r',
+        'Drizzle': 'c',
+        'Spark': 'm',
+        'Flink': 'b'
+    }
 
     if FLAGS.paper_mode:
         plt.figure(figsize=(4.5, 1.5))
@@ -93,13 +101,21 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
 
         bin_range = max_val - min_val + 1
         num_bins = bin_range / bin_width
-        (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
-                                      normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index % 3]], lw=graph_lw)
+        (n, bins, patches) = plt.hist(vals,
+                                      bins=num_bins,
+                                      log=False,
+                                      normed=True,
+                                      cumulative=True,
+                                      histtype="step",
+                                      color=colors[labels[index % 3]],
+                                      lw=graph_lw)
         # hack to add line to legend
         if index < 3:
-            plt.plot([-100], [-100], label=labels[index],
-                    color=colors[labels[index]], linestyle='solid', lw=graph_lw)
+            plt.plot([-100], [-100],
+                     label=labels[index],
+                     color=colors[labels[index]],
+                     linestyle='solid',
+                     lw=graph_lw)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 
@@ -109,12 +125,14 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
 
     lat_increment = 300
     max_x_val = max_cdf_val
-#    max_x_val = 1896
+    #    max_x_val = 1896
     plt.xlim(0, max_x_val)
     x_ticks = range(0, 900, 200)
     x_ticks_str = [str(x) for x in range(0, 900, 200)]
     x_ticks = x_ticks + range(900, max_x_val, 300)
-    x_ticks_str = x_ticks_str + [str(x) for x in range(0, max_x_val - 900, 300)]
+    x_ticks_str = x_ticks_str + [
+        str(x) for x in range(0, max_x_val - 900, 300)
+    ]
     plt.xticks(x_ticks, x_ticks_str)
 
     plt.ylim(0, 1.0)
@@ -123,18 +141,23 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     plt.ylabel("CDF of final event latencies")
     plt.xlabel(label_axis)
     if FLAGS.presentation_mode:
-        plt.legend(bbox_to_anchor=(0.62, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
+        plt.legend(bbox_to_anchor=(0.62, 0.01),
+                   loc=3,
+                   frameon=False,
+                   handlelength=1.5,
+                   handletextpad=0.2)
     else:
         plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight")
+                format=FLAGS.file_format,
+                bbox_inches="tight")
 
 
 def main(argv):
     try:
         argv = FLAGS(argv)
-    except gflags.FlagsError as e:
+    except flags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
     log_paths = FLAGS.log_paths.split(',')
@@ -151,17 +174,23 @@ def main(argv):
     for log_path in log_paths:
         if 'Flink' in labels[index]:
             if 'ExactFlink' in labels[index]:
-                exact_flink = exact_flink + [x + 900 for x in get_latencies(log_path, 0)]
+                exact_flink = exact_flink + [
+                    x + 900 for x in get_latencies(log_path, 0)
+                ]
             else:
                 flink = flink + get_latencies(log_path, 0)
         elif 'Drizzle' in labels[index]:
             if 'ExactDrizzle' in labels[index]:
-                exact_drizzle = exact_drizzle + [x + 900 for x in get_latencies(log_path, 10000)]
+                exact_drizzle = exact_drizzle + [
+                    x + 900 for x in get_latencies(log_path, 10000)
+                ]
             else:
                 drizzle = drizzle + get_latencies(log_path, 10000)
         elif 'Naiad' in labels[index]:
             if 'ExactNaiad' in labels[index]:
-                exact_naiad = exact_naiad + [x + 900 for x in get_latencies(log_path, 10000)]
+                exact_naiad = exact_naiad + [
+                    x + 900 for x in get_latencies(log_path, 10000)
+                ]
             else:
                 naiad = naiad + get_latencies(log_path, 10000)
         else:
@@ -182,7 +211,12 @@ def main(argv):
     latencies.append(exact_drizzle)
     latencies.append(exact_flink)
 
-    plot_cdf('ysb_latency_duplicate_exactly_once_cdf', latencies, 'Final event latency [ms]', new_labels, bin_width=1)
+    plot_cdf('ysb_latency_duplicate_exactly_once_cdf',
+             latencies,
+             'Final event latency [ms]',
+             new_labels,
+             bin_width=1)
+
 
 if __name__ == '__main__':
-  main(sys.argv)
+    app.run(main)

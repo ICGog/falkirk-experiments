@@ -1,7 +1,7 @@
 # Copyright (c) 2017, Ionel Gog
 
 import csv
-import gflags
+from absl import app, flags
 import math
 import matplotlib
 matplotlib.use("agg")
@@ -10,18 +10,20 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from utils import *
 
-FLAGS = gflags.FLAGS
-gflags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
-gflags.DEFINE_string('log_paths', '', ', separated list of path to the log files.')
-gflags.DEFINE_string('labels', '', ', separated list of labels.')
-gflags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
-gflags.DEFINE_integer('delay_epoch', 5, 'Delay ad event every delay_epoch epochs.')
-gflags.DEFINE_string('file_format', 'pdf', 'Plot file format')
+FLAGS = flags.FLAGS
+flags.DEFINE_bool('paper_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_bool('presentation_mode', False, 'Adjusts the size of the plots.')
+flags.DEFINE_string('log_paths', '',
+                    ', separated list of path to the log files.')
+flags.DEFINE_string('labels', '', ', separated list of labels.')
+flags.DEFINE_bool('exactly_once', False, 'Plot exactly once results.')
+flags.DEFINE_integer('delay_epoch', 5,
+                     'Delay ad event every delay_epoch epochs.')
+flags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset):
-    print '--------------- ' + log_path + ' ----------------'
+    print('--------------- ' + log_path + ' ----------------')
     latencies = []
     times = []
     windowTimes = set({})
@@ -30,7 +32,8 @@ def get_latencies(log_path, offset):
     for row in logfile.readlines():
         fields = [x.strip() for x in row.split(' ')]
         windowTimes.add(int(fields[0]))
-        if len(windowTimes) < 20 or len(windowTimes) % FLAGS.delay_epoch == (FLAGS.delay_epoch - 1):
+        if len(windowTimes) < 20 or len(windowTimes) % FLAGS.delay_epoch == (
+                FLAGS.delay_epoch - 1):
             continue
         lastWindowTime = int(fields[0])
         times.append(int(fields[0]))
@@ -47,10 +50,17 @@ def get_latencies(log_path, offset):
 
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
-    colors = {'Naiad SRS': 'r', 'Naiad + Falkirk + Selective': 'r', 'Drizzle' : 'c', 'Naiad SRS w/o Selective' : 'y', 'Naiad + Falkirk' : 'm', 'Flink' : 'b'}
+    colors = {
+        'SmartFT': 'r',
+        'Naiad + Falkirk + Selective': 'r',
+        'Drizzle': 'c',
+        'SmartFT w/o Selective': 'y',
+        'Naiad + Falkirk': 'm',
+        'Flink': 'b'
+    }
 
     if FLAGS.paper_mode:
-        plt.figure(figsize=(3.3, 1.3))
+        plt.figure(figsize=(3.3, 1.1))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
         plt.figure()
@@ -66,43 +76,50 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     max_cdf_val = 0
     index = 0
     for vals in cdf_vals:
-        print "Statistics for %s" % (labels[index])
+        print("Statistics for {}".format(labels[index]))
         avg = np.mean(vals)
-        print "AVG: %f" % (avg)
+        print("AVG: {}".format(avg))
         median = np.median(vals)
-        print "MEDIAN: %f" % (median)
+        print("MEDIAN: {}".format(median))
         min_val = np.min(vals)
-        print "MIN: %ld" % (min_val)
+        print("MIN: {}".format(min_val))
         max_val = np.max(vals)
         max_cdf_val = max(max_val, max_cdf_val)
-        print "MAX: %ld" % (max_val)
+        print("MAX: {}".format(max_val))
         stddev = np.std(vals)
-        print "STDDEV: %f" % (stddev)
-        print "PERCENTILES:"
+        print("STDDEV: {}".format(stddev))
+        print("PERCENTILES:")
         perc1 = np.percentile(vals, 1)
-        print "  1st: %f" % (perc1)
+        print("  1st: {}".format(perc1))
         perc10 = np.percentile(vals, 10)
-        print " 10th: %f" % (perc10)
+        print(" 10th: {}".format(perc10))
         perc25 = np.percentile(vals, 25)
-        print " 25th: %f" % (perc25)
+        print(" 25th: {}".format(perc25))
         perc50 = np.percentile(vals, 50)
-        print " 50th: %f" % (perc50)
+        print(" 50th: {}".format(perc50))
         perc75 = np.percentile(vals, 75)
-        print " 75th: %f" % (perc75)
+        print(" 75th: {}".format(perc75))
         perc90 = np.percentile(vals, 90)
-        print " 90th: %f" % (perc90)
+        print(" 90th: {}".format(perc90))
         perc99 = np.percentile(vals, 99)
-        print " 99th: %f" % (perc99)
+        print(" 99th: {}".format(perc99))
 
         bin_range = max_val - min_val + 1
-        num_bins = bin_range / bin_width
-        (n, bins, patches) = plt.hist(vals, bins=num_bins, log=False,
-                                      normed=True, cumulative=True,
-                                      histtype="step", color=colors[labels[index]],
+        num_bins = int(bin_range / bin_width)
+        (n, bins, patches) = plt.hist(vals,
+                                      bins=num_bins,
+                                      log=False,
+                                      density=True,
+                                      cumulative=True,
+                                      histtype="step",
+                                      color=colors[labels[index]],
                                       lw=graph_lw)
         # hack to add line to legend
-        plt.plot([-100], [-100], label=labels[index],
-                 color=colors[labels[index]], linestyle='solid', lw=graph_lw)
+        plt.plot([-100], [-100],
+                 label=labels[index],
+                 color=colors[labels[index]],
+                 linestyle='solid',
+                 lw=graph_lw)
         # hack to remove vertical bar
         patches[0].set_xy(patches[0].get_xy()[:-1])
 
@@ -117,7 +134,7 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     if FLAGS.presentation_mode:
         max_x_val = 1292
     if max_x_val != max_cdf_val:
-        print 'Attention: max_x_val and max_cdf_val differ'
+        print('Attention: max_x_val and max_cdf_val differ')
 
     plt.xlim(0, max_x_val)
     plt.xticks(range(0, max_x_val, lat_increment),
@@ -126,30 +143,40 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
 
     # plt.yticks(np.arange(0.0, 1.01, 0.2),
     #            [str(x) for x in np.arange(0.0, 1.01, 0.2)])
-    plt.ylabel("CDF of response latencies")
+    plt.ylabel("CDF")
     y_ticks = []
     y_val = 0
     while y_val <= 1.0:
         y_ticks.append(y_val)
         y_val += 0.2
+    y_ticks = 0, 0.2, 0.4, 0.6, 0.8, 1.0
     plt.yticks(y_ticks, [str(y) for y in y_ticks])
-    plt.ylabel("CDF of response latencies", labelpad=0.01)
+    plt.ylabel("CDF", labelpad=0.01)
     ax = plt.gca()
-    ax.yaxis.set_label_coords(-0.11, 0.4)
+    #ax.yaxis.set_label_coords(-0.11, 0.4)
 
     plt.xlabel(label_axis)
     if FLAGS.presentation_mode:
-        plt.legend(bbox_to_anchor=(0.43, 0.01), loc=3, frameon=False, handlelength=1.5, handletextpad=0.2)
+        plt.legend(bbox_to_anchor=(0.43, 0.01),
+                   loc=3,
+                   frameon=False,
+                   handlelength=1.5,
+                   handletextpad=0.2)
     else:
-        plt.legend(loc=4, frameon=False, handlelength=1.5, handletextpad=0.2)
+        plt.legend(loc='lower right',
+                   frameon=False,
+                   handlelength=1.5,
+                   handletextpad=0.2)
 
     plt.savefig(plot_file_name + "." + FLAGS.file_format,
-                format=FLAGS.file_format, bbox_inches="tight")
+                format=FLAGS.file_format,
+                bbox_inches="tight")
+
 
 def main(argv):
     try:
         argv = FLAGS(argv)
-    except gflags.FlagsError as e:
+    except flags.FlagsError as e:
         print('%s\\nUsage: %s ARGS\\n%s' % (e, sys.argv[0], FLAGS))
 
     log_paths = FLAGS.log_paths.split(',')
@@ -181,19 +208,23 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad_selective) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS")
+            new_labels.append("SmartFT")
         else:
             new_labels.append("Naiad + Falkirk + Selective")
         latencies.append(naiad_selective)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("Naiad SRS w/o Selective")
+            new_labels.append("SmartFT w/o Selective")
         else:
             new_labels.append("Naiad + Falkirk")
         latencies.append(naiad)
 
-    plot_cdf('ysb_latency_cdf', latencies, 'Response latency [ms]', new_labels, bin_width=1)
+    plot_cdf('ysb_latency_cdf',
+             latencies,
+             'Response latency [ms]',
+             new_labels,
+             bin_width=1)
 
 
 if __name__ == '__main__':
-  main(sys.argv)
+    app.run(main)
