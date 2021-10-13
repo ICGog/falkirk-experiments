@@ -91,25 +91,39 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 
 def plot_latencies(plot_file_name, latencies, labels):
     colors = {
-        'SmartFT': 'r',
-        'Naiad + Falkirk + Selective': 'r',
+        'FW-N': 'r',
+        'Falkirk Wheel': 'r',
         'Drizzle': 'c',
-        'SmartFT w/o Selective': 'y',
-        'Naiad + Falkirk': 'm',
+        'FW-N w/o Selective': 'y',
+        'Falkirk Wheel w/o Selective': 'm',
         'Flink': 'b'
     }
     markers = {
-        'SmartFT': '^',
-        'Naiad + Falkirk + Selective': '^',
+        'FW-N': '^',
+        'Falkirk Wheel': '^',
         'Drizzle': '+',
-        'SmartFT w/o Selective': 'v',
-        'Naiad + Falkirk': 'v',
+        'FW-N w/o Selective': 'v',
+        'Falkirk Wheel w/o Selective': 'v',
         'Flink': 'o'
     }
     if FLAGS.paper_mode:
         plt.figure(figsize=(3.3, 1.1))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
+        plt.style.use('dark_background')
+        plt.rcParams.update({
+            "font.family": "calibri",
+            "lines.color": "white",
+            "patch.edgecolor": "white",
+            "text.color": "white",
+            "axes.facecolor": "#212121",
+            "axes.edgecolor": "white",
+            "axes.labelcolor": "white",
+            "figure.facecolor": "#212121",
+            "figure.edgecolor": "#212121",
+            "savefig.facecolor": "#212121",
+            "savefig.edgecolor": "#212121",
+        })
         plt.figure()
         set_presentation_rcs()
     else:
@@ -217,7 +231,7 @@ def plot_latencies(plot_file_name, latencies, labels):
         plt.legend(loc='upper left',
                    frameon=False,
                    handlelength=1.0,
-                   bbox_to_anchor=(0.43, 0.99),
+                   bbox_to_anchor=(-0.02, 1.03),
                    handletextpad=0.2,
                    numpoints=1)
     else:
@@ -301,15 +315,15 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("SmartFT w/o Selective")
+            new_labels.append("FW-N w/o Selective")
         else:
-            new_labels.append("Naiad + Falkirk")
+            new_labels.append("Falkirk Wheel w/o Selective")
         latencies.append(naiad)
     if len(naiad_selective) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("SmartFT")
+            new_labels.append("FW-N")
         else:
-            new_labels.append("Naiad + Falkirk + Selective")
+            new_labels.append("Falkirk Wheel")
         latencies.append(naiad_selective)
 
     plot_latencies('ysb_ft_latency_timeline', latencies, new_labels)

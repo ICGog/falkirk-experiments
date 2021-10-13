@@ -89,15 +89,15 @@ def get_latencies(log_path, offset, low_skip, high_skip):
 
 def plot_latencies(plot_file_name, latencies, labels):
     colors = {
-        'SmartFT': 'r',
-        'Naiad + Falkirk': 'r',
+        'FW-N': 'r',
+        'Falkirk Wheel': 'r',
         'Drizzle': 'c',
         'Spark': 'm',
         'Flink': 'b'
     }
     markers = {
-        'SmartFT': '^',
-        'Naiad + Falkirk': '^',
+        'FW-N': '^',
+        'Falkirk Wheel': '^',
         'Drizzle': '+',
         'Spark': 'v',
         'Flink': 'o'
@@ -106,6 +106,20 @@ def plot_latencies(plot_file_name, latencies, labels):
         plt.figure(figsize=(6, 1.2))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
+        plt.style.use('dark_background')
+        plt.rcParams.update({
+            "font.family": "calibri",
+            "lines.color": "white",
+            "patch.edgecolor": "white",
+            "text.color": "white",
+            "axes.facecolor": "#212121",
+            "axes.edgecolor": "white",
+            "axes.labelcolor": "white",
+            "figure.facecolor": "#212121",
+            "figure.edgecolor": "#212121",
+            "savefig.facecolor": "#212121",
+            "savefig.edgecolor": "#212121",
+        })
         plt.figure(figsize=(12, 6))
         set_presentation_rcs()
     else:
@@ -193,7 +207,14 @@ def plot_latencies(plot_file_name, latencies, labels):
     separation_lw = 0.5
     if FLAGS.presentation_mode:
         separation_lw = 2.0
-    plt.axvline(240, linestyle=':', color='k', lw=separation_lw)
+        plt.axvline(240, linestyle=':', color='w', lw=separation_lw)
+        plt.axvline(360, linestyle='-', color='w', lw=separation_lw)
+        plt.axvline(460, linestyle=':', color='w', lw=separation_lw)
+    else:
+        plt.axvline(240, linestyle=':', color='k', lw=separation_lw)
+        plt.axvline(360, linestyle='-', color='k', lw=separation_lw)
+        plt.axvline(460, linestyle=':', color='k', lw=separation_lw)
+
     plt.annotate('Worker failure',
                  xy=(242, 2100),
                  xycoords='data',
@@ -204,8 +225,6 @@ def plot_latencies(plot_file_name, latencies, labels):
                  xycoords='data',
                  verticalalignment='bottom',
                  ha='left')
-    plt.axvline(360, linestyle='-', color='k', lw=separation_lw)
-    plt.axvline(460, linestyle=':', color='k', lw=separation_lw)
     plt.annotate('Worker failure',
                  xy=(458, 2100),
                  xycoords='data',
@@ -244,7 +263,7 @@ def plot_latencies(plot_file_name, latencies, labels):
         [x for x in range(150, 351, 50)] + [x for x in range(370, 571, 50)],
         [str(x)
          for x in range(150, 351, 50)] + [str(x) for x in range(150, 351, 50)])
-    plt.xlabel("Time [sec]", labelpad=0.01)
+    plt.xlabel("Time [sec]", labelpad=0.09)
     if FLAGS.log_scale:
         plt.legend(loc='lower right',
                    frameon=False,
@@ -257,7 +276,7 @@ def plot_latencies(plot_file_name, latencies, labels):
                        frameon=False,
                        handlelength=1.0,
                        ncol=3,
-                       bbox_to_anchor=(0.22, 1.11),
+                       bbox_to_anchor=(0.22, 1.16),
                        handletextpad=0.2,
                        numpoints=1)
         else:
@@ -359,9 +378,9 @@ def main(argv):
         latencies.append(drizzle)
     if len(naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("SmartFT")
+            new_labels.append("FW-N")
         else:
-            new_labels.append("Naiad + Falkirk")
+            new_labels.append("Falkirk Wheel")
         latencies.append(naiad)
 
     if len(exact_flink) > 0:
@@ -372,9 +391,9 @@ def main(argv):
         latencies.append(exact_drizzle)
     if len(exact_naiad) > 0:
         if FLAGS.paper_mode:
-            new_labels.append("SmartFT")
+            new_labels.append("FW-N")
         else:
-            new_labels.append("Naiad + Falkirk")
+            new_labels.append("Falkirk Wheel")
         latencies.append(exact_naiad)
     plot_latencies('ysb_ft_latency_timeline', latencies, new_labels)
 

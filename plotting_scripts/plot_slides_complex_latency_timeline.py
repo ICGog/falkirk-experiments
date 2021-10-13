@@ -118,6 +118,20 @@ def plot_latencies(plot_file_name, input_latency, fast_latency,
      fast_event_times) = fast_latency
     (workers_failed, workers_paused, workers_rollback,
      workers_recovered) = rollback_events
+    plt.style.use('dark_background')
+    plt.rcParams.update({
+        "font.family": "calibri",
+        "lines.color": "white",
+        "patch.edgecolor": "white",
+        "text.color": "white",
+        "axes.facecolor": "#212121",
+        "axes.edgecolor": "white",
+        "axes.labelcolor": "white",
+        "figure.facecolor": "#212121",
+        "figure.edgecolor": "#212121",
+        "savefig.facecolor": "#212121",
+        "savefig.edgecolor": "#212121",
+    })
     if FLAGS.paper_mode:
         plt.figure(figsize=(7.8, 1.1))
         set_paper_rcs()
@@ -251,46 +265,46 @@ def plot_latencies(plot_file_name, input_latency, fast_latency,
     if FLAGS.presentation_mode:
         separation_lw = 2.0
 
-    plt.axvline(first_worker_failure,
-                linestyle=':',
-                color='w',
-                lw=separation_lw)
-    plt.annotate('First\nfailure',
-                 xy=(first_worker_failure - 100, 6),
-                 xycoords='data',
-                 verticalalignment='top',
-                 ha='right')
+    # plt.axvline(first_worker_failure,
+    #             linestyle=':',
+    #             color='w',
+    #             lw=separation_lw)
+    # plt.annotate('First\nfailure',
+    #              xy=(first_worker_failure - 100, 6),
+    #              xycoords='data',
+    #              verticalalignment='top',
+    #              ha='right')
 
-    if FLAGS.workers_paused:
-        plt.axvline(last_worker_pause,
-                    linestyle=':',
-                    color='w',
-                    lw=separation_lw)
-        plt.annotate('Processors\npaused',
-                     xy=(last_worker_pause - 110, 8),
-                     xycoords='data',
-                     verticalalignment='top',
-                     ha='right')
-        if FLAGS.rollback_computed:
-            plt.axvline(last_worker_rollback,
-                        linestyle=':',
-                        color='w',
-                        lw=separation_lw)
-            plt.annotate('Rollback\ncomputed',
-                         xy=(last_worker_rollback + 100, 13),
-                         xycoords='data',
-                         verticalalignment='top',
-                         ha='left')
-            if FLAGS.processors_recovered:
-                plt.axvline(last_worker_recovered,
-                            linestyle=':',
-                            color='w',
-                            lw=separation_lw)
-                plt.annotate('Processors recovered',
-                             xy=(last_worker_recovered + 100, 16),
-                             xycoords='data',
-                             verticalalignment='top',
-                             ha='left')
+    # if FLAGS.workers_paused:
+    #     plt.axvline(last_worker_pause,
+    #                 linestyle=':',
+    #                 color='w',
+    #                 lw=separation_lw)
+    #     plt.annotate('Processors\npaused',
+    #                  xy=(last_worker_pause - 110, 8),
+    #                  xycoords='data',
+    #                  verticalalignment='top',
+    #                  ha='right')
+    #     if FLAGS.rollback_computed:
+    #         plt.axvline(last_worker_rollback,
+    #                     linestyle=':',
+    #                     color='w',
+    #                     lw=separation_lw)
+    #         plt.annotate('Rollback\ncomputed',
+    #                      xy=(last_worker_rollback + 100, 13),
+    #                      xycoords='data',
+    #                      verticalalignment='top',
+    #                      ha='left')
+    #         if FLAGS.processors_recovered:
+    #             plt.axvline(last_worker_recovered,
+    #                         linestyle=':',
+    #                         color='w',
+    #                         lw=separation_lw)
+    #             plt.annotate('Processors recovered',
+    #                          xy=(last_worker_recovered + 100, 16),
+    #                          xycoords='data',
+    #                          verticalalignment='top',
+    #                          ha='left')
 
     plt.ylabel('Latency [sec]')
     if FLAGS.presentation_mode:

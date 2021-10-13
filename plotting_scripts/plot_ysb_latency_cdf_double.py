@@ -20,7 +20,7 @@ flags.DEFINE_string('file_format', 'pdf', 'Plot file format')
 
 
 def get_latencies(log_path, offset):
-    print '--------------- ' + log_path + ' ----------------'
+    print('--------------- ' + log_path + ' ----------------')
     latencies = []
     times = []
     windowTimes = set({})

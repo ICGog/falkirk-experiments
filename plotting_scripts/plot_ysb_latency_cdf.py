@@ -48,8 +48,8 @@ def get_latencies(log_path, offset):
 
 def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     colors = {
-        'SmartFT': 'r',
-        'Naiad + Falkirk': 'r',
+        'FW-N': 'r',
+        'Falkirk Wheel': 'r',
         'Drizzle': 'c',
         'Spark': 'm',
         'Flink': 'b'
@@ -59,6 +59,20 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
         plt.figure(figsize=(1.5, 1.0))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
+        plt.style.use('dark_background')
+        plt.rcParams.update({
+            "font.family": "calibri",
+            "lines.color": "white",
+            "patch.edgecolor": "white",
+            "text.color": "white",
+            "axes.facecolor": "#212121",
+            "axes.edgecolor": "white",
+            "axes.labelcolor": "white",
+            "figure.facecolor": "#212121",
+            "figure.edgecolor": "#212121",
+            "savefig.facecolor": "#212121",
+            "savefig.edgecolor": "#212121",
+        })
         plt.figure()
         set_presentation_rcs()
     else:
@@ -150,10 +164,10 @@ def plot_cdf(plot_file_name, cdf_vals, label_axis, labels, bin_width=1000):
     #ax.yaxis.set_label_coords(-0.16, 0.4)
     plt.xlabel(label_axis)
     if FLAGS.presentation_mode:
-        plt.legend(bbox_to_anchor=(0.62, 0.01),
+        plt.legend(bbox_to_anchor=(0.56, 0.01),
                    loc=3,
                    frameon=False,
-                   handlelength=1.5,
+                   handlelength=1.0,
                    handletextpad=0.2)
     else:
         if not FLAGS.exactly_once:
@@ -194,9 +208,9 @@ def main(argv):
     new_labels = []
     if len(naiad) > 0:
         if FLAGS.presentation_mode:
-            new_labels.append("Naiad + Falkirk")
+            new_labels.append("Falkirk Wheel")
         else:
-            new_labels.append("SmartFT")
+            new_labels.append("FW-N")
         latencies.append(naiad)
     if len(drizzle) > 0:
         new_labels.append("Drizzle")

@@ -87,12 +87,28 @@ def get_fast_latency(input_file_path):
 
 def plot_latencies(latencies, labels):
     colors = ['y', 'y', 'r', 'y', 'r', 'y', 'r']
+    box_color = "w"
     if FLAGS.paper_mode:
         plt.figure(figsize=(3, 1))
         set_paper_rcs()
     elif FLAGS.presentation_mode:
-        plt.figure()
+        plt.style.use('dark_background')
+        plt.rcParams.update({
+            "font.family": "calibri",
+            "lines.color": "white",
+            "patch.edgecolor": "white",
+            "text.color": "white",
+            "axes.facecolor": "#212121",
+            "axes.edgecolor": "white",
+            "axes.labelcolor": "white",
+            "figure.facecolor": "#212121",
+            "figure.edgecolor": "#212121",
+            "savefig.facecolor": "#212121",
+            "savefig.edgecolor": "#212121",
+        })
         set_presentation_rcs()
+        plt.figure(figsize=(6, 3.5))
+        box_color = "#212121"
     else:
         plt.figure()
         set_rcs()
@@ -109,29 +125,37 @@ def plot_latencies(latencies, labels):
                                  color=colors,
                                  box_lw=1.5,
                                  median_lw=1.5,
-                                 index_step=2)
+                                 index_step=2,
+                                 box_color=box_color)
     else:
         bp = percentile_box_plot(ax,
                                  latencies,
                                  color=colors,
                                  box_lw=1.5,
-                                 median_lw=1.5)
+                                 median_lw=1.5,
+                                 box_color=box_color)
 
     plt.plot(-1, -1, label='Naiad', color='y', lw=1.3)
     if FLAGS.paper_mode:
-        plt.plot(-1, -1, label='Naiad SmartFT', color='r', lw=1.3)
+        plt.plot(-1, -1, label='FW-N', color='r', lw=1.3)
+        plt.axvline(2.5, ls='-', color='k')
+        ax.legend(frameon=False,
+                  loc="upper center",
+                  ncol=2,
+                  bbox_to_anchor=(0.0, 1.1, 1.0, 0.16),
+                  handlelength=1.0,
+                  handletextpad=0.2,
+                  columnspacing=1.8)
     else:
-        plt.plot(-1, -1, label='Naiad Falkirk', color='r', lw=1.0)
-
-    plt.axvline(2.5, ls='-', color='k')
-
-    ax.legend(frameon=False,
-              loc="upper center",
-              ncol=2,
-              bbox_to_anchor=(0.0, 1.1, 1.0, 0.16),
-              handlelength=1.0,
-              handletextpad=0.2,
-              columnspacing=1.8)
+        plt.plot(-1, -1, label='Falkirk Wheel', color='r', lw=1.0)
+        plt.axvline(2.5, ls='-', color='w')
+        ax.legend(frameon=False,
+                  loc="upper center",
+                  ncol=2,
+                  bbox_to_anchor=(0.0, 1.02, 1.0, 0.16),
+                  handlelength=1.0,
+                  handletextpad=0.2,
+                  columnspacing=1.8)
 
     plt.xlim(0.5, 2 * len(labels) + 0.5)
     plt.xticks([x * 2 + 1.5 for x in range(0, len(labels))], labels)
